@@ -4,6 +4,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchMenuController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\FrontController;
 use App\Http\Controllers\MenuitemController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
@@ -24,9 +25,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [FrontController::class, 'index'])->name('index');
+Route::get('/aboutus', [FrontController::class, 'aboutus'])->name('aboutus');
+Route::get('/shop', [FrontController::class, 'shop'])->name('shop');
+
 
 Auth::routes();
 
