@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Malhal\Geographical\Geographical;
 
 class Branch extends Model
 {
     use HasFactory;
+    use Geographical;
     protected $fillable = [
         'branchname',
         'branchlocation',
@@ -15,5 +17,6 @@ class Branch extends Model
         'latitude',
         'phone',
         'status',
+        'branchimage',
     ];
 }

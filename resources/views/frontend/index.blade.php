@@ -54,43 +54,19 @@
                     <div class="about__bar">
                         <div class="locations_slider owl-carousel">
 
-                            <div class="cookbook">
-                                <div class="cookbook__pic set-bg" data-setbg="{{asset('frontend/img/class/class-2.jpg')}}">
+                            @foreach ($branches as $mainbranch)
+                                <div class="cookbook">
+                                    <div class="cookbook__pic set-bg" data-setbg="{{Storage::disk('uploads')->url($mainbranch->branchimage)}}">
 
+                                    </div>
+                                    <div class="cookbook__text">
+                                        <h5><a href="#">{{$mainbranch->branchlocation}}</a></h5>
+
+                                        <!-- <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p> -->
+                                        <a href="#" class="read_more">View Menu</a>
+                                    </div>
                                 </div>
-                                <div class="cookbook__text">
-                                    <h5><a href="#">Kathmandu</a></h5>
-
-                                    <!-- <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p> -->
-                                    <a href="#" class="read_more">View Menu</a>
-                                </div>
-                            </div>
-
-                              <div class="cookbook">
-                                <div class="cookbook__pic set-bg" data-setbg="{{asset('frontend/img/class/class-3.jpg')}}">
-
-                                </div>
-                                <div class="cookbook__text">
-                                    <h5><a href="#">Lalitpur</a></h5>
-
-                                    <!-- <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p> -->
-                                    <a href="#" class="read_more">View Menu</a>
-                                </div>
-                            </div>
-
-                              <div class="cookbook">
-                                <div class="cookbook__pic set-bg" data-setbg="{{asset('frontend/img/class/class-3.jpg')}}">
-
-                                </div>
-                                <div class="cookbook__text">
-                                    <h5><a href="#">Bhaktapur</a></h5>
-
-                                    <!-- <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p> -->
-                                    <a href="#" class="read_more">View Menu</a>
-                                </div>
-                            </div>
-
-
+                            @endforeach
 
 
                         </div>

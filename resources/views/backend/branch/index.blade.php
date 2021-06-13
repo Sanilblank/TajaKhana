@@ -25,6 +25,7 @@
                     <tr>
                         <th class="text-center">No</th>
                         <th class="text-center">Branch Name</th>
+                        <th class="text-center">Branch Image</th>
                         <th class="text-center">Location</th>
                         <th class="text-center">Latitude</th>
                         <th class="text-center">Longitude</th>
@@ -57,6 +58,7 @@
           columns: [
               {data: 'DT_RowIndex', name: 'DT_RowIndex'},
               {data: 'branchname', name: 'branchname'},
+              {data: 'branchimage', name: 'branchimage'},
               {data: 'branchlocation', name: 'branchlocation'},
               {data: 'latitude', name: 'latitude'},
               {data: 'longitude', name: 'longitude'},

@@ -80,6 +80,15 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="branchimage">Branch Image: </label>
+                                <input type="file" name="branchimage" class="form-control">
+                                @error('branchimage')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                     <p class="h4 mt-3">Chef Information</p>
                     <div class="row">

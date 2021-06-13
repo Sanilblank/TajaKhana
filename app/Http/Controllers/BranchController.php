@@ -44,6 +44,11 @@ class BranchController extends Controller
                             $img = "<img src = '$photo' style='max-height:100px'>";
                             return $img;
                         })
+                        ->addColumn('branchimage', function ($row) {
+                            $photo = Storage::disk('uploads')->url($row->branchimage);
+                            $img = "<img src = '$photo' style='max-height:100px'>";
+                            return $img;
+                        })
                         ->addColumn('action', function($row){
                                 $branchmenu = route('branchmenu.index', $row->id);
                                 $editurl = route('branch.edit', $row->id);
@@ -61,7 +66,7 @@ class BranchController extends Controller
 
                                 return $btn;
                         })
-                        ->rawColumns(['status', 'chefname', 'chefphoto', 'action'])
+                        ->rawColumns(['status', 'chefname', 'chefphoto', 'branchimage', 'action'])
                         ->make(true);
             }
             return view('backend.branch.index');
@@ -104,6 +109,7 @@ class BranchController extends Controller
             'name' => 'required',
             'photo' => 'required|mimes: jpg,png,jpeg',
             'details' => 'required',
+            'branchimage' => 'required|mimes: jpg,png,jpeg',
         ]);
 
         $exists = Branch::where('branchlocation', $data['branchlocation'])->where('branchname', $data['branchname'])->first();
@@ -118,6 +124,12 @@ class BranchController extends Controller
                 $photoname = $image->store('chef_images', 'uploads');
             }
 
+            $branchimage = '';
+            if($request->hasfile('branchimage')){
+                $image = $request->file('branchimage');
+                $branchimage = $image->store('branch_images', 'uploads');
+            }
+
         $branch = Branch::create([
             'branchname' => $data['branchname'],
             'branchlocation' => $data['branchlocation'],
@@ -125,6 +137,7 @@ class BranchController extends Controller
             'longitude' => $data['longitude'],
             'phone' => $data['phone'],
             'status' => $data['status'],
+            'branchimage' => $branchimage,
         ]);
 
         $chef = Chef::create([
@@ -189,6 +202,8 @@ class BranchController extends Controller
             'name' => 'required',
             'photo' => 'mimes:png,jpg,jpeg',
             'details' => 'required',
+            'branchimage' => 'mimes:png,jpg,jpeg',
+
         ]);
 
         $photoname = '';
@@ -201,12 +216,23 @@ class BranchController extends Controller
                 $photoname = $chef->photo;
             }
 
+            $branchimage = '';
+            if($request->hasfile('branchimage')){
+                Storage::disk('uploads')->delete($branch->branchimage);
+                $image = $request->file('branchimage');
+                $branchimage = $image->store('branch_images', 'uploads');
+            }
+            else {
+                $branchimage = $branch->branchimage;
+            }
+
         $branch->update([
             'branchname' => $data['branchname'],
             'latitude' => $data['latitude'],
             'longitude' => $data['longitude'],
             'phone' => $data['phone'],
             'status' => $data['status'],
+            'branchimage' => $branchimage,
         ]);
 
         $chef->update([
@@ -228,6 +254,7 @@ class BranchController extends Controller
         //
         if ($request->user()->can('manage-branch')) {
             $branch = Branch::findorfail($id);
+            Storage::disk('uploads')->delete($branch->branchimage);
             $branch->delete();
             return redirect()->back()->with('success', 'Branch Deleted Successfully.');
         }else{

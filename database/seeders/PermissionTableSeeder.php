@@ -43,7 +43,7 @@ class PermissionTableSeeder extends Seeder
             ],
             [
                 'name' => 'Manage Branch',
-                'slug' => Str::slug('Manage Category'),
+                'slug' => Str::slug('Manage Branch'),
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s"),
             ],

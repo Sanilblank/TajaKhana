@@ -17,10 +17,11 @@ class CreateBranchesTable extends Migration
             $table->id();
             $table->string('branchname');
             $table->string('branchlocation');
-            $table->string('longitude');
-            $table->string('latitude');
+            $table->double('longitude');
+            $table->double('latitude');
             $table->string('phone');
             $table->integer('status');
+            $table->string('branchimage');
             $table->timestamps();
         });
     }

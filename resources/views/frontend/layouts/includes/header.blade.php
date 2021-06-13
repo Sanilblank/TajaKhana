@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="offcanvas__logo">
-            <a href="./index.html"><img src="{{asset('frontend/img/tajalogo.png')}}" alt=""></a>
+            <a href="{{route('index')}}"><img src="{{Storage::disk('uploads')->url($setting->headerImage)}}" alt="Header Logo"></a>
         </div>
         <div id="mobile-menu-wrap"></div>
         <div class="offcanvas__option">
@@ -65,7 +65,7 @@
                                 </ul>
                             </div>
                             <div class="header__logo">
-                                <a href="./index.html"><img src="{{asset('frontend/img/tajalogo.png')}}" alt=""></a>
+                                <a href="{{route('index')}}"><img src="{{Storage::disk('uploads')->url($setting->headerImage)}}" alt="Header Logo"></a>
                             </div>
                             <div class="header__top__right">
                                 <div class="header__top__right__links">
