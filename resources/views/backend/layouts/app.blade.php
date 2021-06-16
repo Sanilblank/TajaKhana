@@ -103,7 +103,7 @@
                         class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a href="{{ route('setting.index') }}">General</a></li>
-                            <li><a href="#">Slider Settings</a></li>
+                            <li><a href="{{ route('slider.index') }}">Slider Settings</a></li>
                         </ul>
                     </li>
                   {{-- <li><a><i class="fa fa-sitemap"></i> Multilevel Menu <span class="fa fa-chevron-down"></span></a>
@@ -178,68 +178,40 @@
                 </form>
                 </li>
 
+                @php
+                    $newnotifications = DB::table('notifications')->where('is_read', 0)->count();
+                    $newuser = DB::table('notifications')->where('type','App\Notifications\NewUserNotification')->where('is_read', 0)->count();
+                @endphp
                 <li role="presentation" class="nav-item dropdown open">
                   <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-envelope-o"></i>
-                    <span class="badge bg-green">6</span>
+                    <i class="fa fa-bell"></i>
+                    <span class="badge bg-green">{{$newnotifications}}</span>
                   </a>
                   <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
-                    <li class="nav-item">
-                      <a class="dropdown-item">
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="dropdown-item">
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="dropdown-item">
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="dropdown-item">
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <div class="text-center">
-                        <a class="dropdown-item">
-                          <strong>See All Alerts</strong>
-                          <i class="fa fa-angle-right"></i>
-                        </a>
-                      </div>
-                    </li>
+                      @if ($newuser > 0)
+                        <li class="nav-item">
+                            <a class="dropdown-item" href="{{route('user.index')}}">
+
+                                <span>
+                                    <i class="fa fa-user"></i><span style="font-size: 15px;"> &nbsp;<b>{{$newuser}}</b> new user has just registerd.</span>
+                                </span>
+                            </a>
+                        </li>
+                      @endif
+
+
+                      @if ($newnotifications == 0)
+                        <li class="nav-item">
+                            <div class="text-center">
+                            <a class="dropdown-item">
+                                <strong>No new notifications</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                            </div>
+                        </li>
+
+                      @endif
+
                   </ul>
                 </li>
               </ul>

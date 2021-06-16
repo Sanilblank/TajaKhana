@@ -7,30 +7,21 @@
     <!-- Hero Section Begin -->
     <section class="hero">
         <div class="hero__slider owl-carousel">
-            <div class="hero__item set-bg" data-setbg="https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80">
+            @foreach ($sliders as $slider)
+            <div class="hero__item set-bg" data-setbg="{{Storage::disk('uploads')->url($slider->images)}}">
                 <div class="container">
                     <div class="row d-flex justify-content-center">
                         <div class="col-lg-8">
                             <div class="hero__text">
-                                <h2>Awesome food for the best prices !! </h2>
+                                <h2>{{$slider->title}}</h2>
+                                <p>{!! $slider->description !!}</p>
                                 <a href="#" class="primary-btn">Order Now</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="hero__item set-bg" data-setbg="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=967&q=80">
-                <div class="container">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-lg-8">
-                            <div class="hero__text">
-                                <h2>Select the Location Nearest to you</h2>
-                                <a href="#" class="primary-btn">Select Location</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </section>
     <!-- Hero Section End -->
@@ -67,8 +58,6 @@
                                     </div>
                                 </div>
                             @endforeach
-
-
                         </div>
 
                     </div>

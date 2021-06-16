@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchMenuController;
 use App\Http\Controllers\CategoryController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SliderController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +34,8 @@ Route::get('/shop', [FrontController::class, 'shop'])->name('shop');
 
 Auth::routes();
 
+Route::get('/verify', [RegisterController::class, 'verifyUser'])->name('verify.user');
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
  Route::group(['middleware' => ['auth']], function() {
@@ -50,6 +54,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
     Route::resource('menuitem', MenuitemController::class);
 
     Route::resource('setting', SettingController::class);
+    Route::resource('slider', SliderController::class);
 
     // Route::resource('product', ProductController::class);
 });

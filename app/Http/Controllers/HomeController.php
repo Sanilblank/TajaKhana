@@ -26,7 +26,7 @@ class HomeController extends Controller
     {
         if((Auth::user()->users_roles->role_id) == 3)
         {
-            return view('frontend.index');
+            return redirect()->route('index');
         }
         else{
             return view('backend.dashboard');

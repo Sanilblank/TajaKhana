@@ -19,7 +19,7 @@
         <div class="offcanvas__logo">
             <a href="{{route('index')}}"><img src="{{Storage::disk('uploads')->url($setting->headerImage)}}" alt="Header Logo"></a>
         </div>
-        <div id="mobile-menu-wrap"></div>
+        <div id="mobile-menu-wrap"></div> <!-- Mobile View Menu -->
         <div class="offcanvas__option">
             <ul>
                 <li>USD <span class="arrow_carrot-down"></span>
@@ -34,7 +34,7 @@
                         <li>ENG</li>
                     </ul>
                 </li>
-                <li><a href="#">Sign in</a> <span class="arrow_carrot-down"></span></li>
+                <li><a href="#">Sign</a> <span class="arrow_carrot-down"></span></li>
             </ul>
         </div>
     </div>
@@ -61,7 +61,30 @@
                                             <li>ENG</li>
                                         </ul>
                                     </li>
-                                    <li><a href="#">Sign in</a> <span class="arrow_carrot-down"></span></li>
+                                    <li>
+                                        @if (Auth::guest() || Auth::user()->users_roles->role_id != 3)
+                                            <a href="javascript:void(0)" onclick="openLoginModal();"> Login</a>
+                                        @elseif (Auth::user()->users_roles->role_id == 3)
+                                            <a href="#">{{Auth::user()->name}}</a>
+                                            <ul class="dropdown p-2">
+                                                <li><a href="./shop-details.html" style="color: whitesmoke">Shop Details</a></li>
+                                                <li><a href="./shoping-cart.html" style="color: whitesmoke">Shoping Cart</a></li>
+                                                <li><a href="./checkout.html" style="color: whitesmoke">Check Out</a></li>
+                                                <li><a href="./wisslist.html" style="color: whitesmoke">Wisslist</a></li>
+                                                <li><a href="./Class.html" style="color: whitesmoke">Class</a></li>
+                                                <li><a href="./blog-details.html" style="color: whitesmoke">Blog Details</a></li>
+                                                <li><form method="POST" action="{{ route('logout') }}">
+                                                    @csrf
+                                                    <a href="{{ route('logout') }}"
+                                                            onclick="event.preventDefault();
+                                                            this.closest('form').submit();" style="color: whitesmoke">
+                                                            Logout
+                                                    </a>
+                                                </form>
+                                            </li>
+                                            </ul>
+                                        @endif
+                                    </li>
                                 </ul>
                             </div>
                             <div class="header__logo">

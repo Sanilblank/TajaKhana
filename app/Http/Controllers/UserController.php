@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\UserRole;
 use Illuminate\Http\Request;
 use DataTables;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -27,6 +28,13 @@ class UserController extends Controller
     {
         //
         if ($request->user()->can('manage-user')) {
+
+            $newuser = DB::table('notifications')->where('type', 'App\Notifications\NewUserNotification')->where('is_read', 0)->get();
+            foreach ($newuser as $user) {
+                DB::update('update notifications set is_read = 1 where id = ?', [$user->id]);
+            }
+
+
             if ($request->ajax()) {
                 $data = User::latest()->get();
                 return DataTables::of($data)
@@ -91,6 +99,7 @@ class UserController extends Controller
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
+                'is_verified' => 1,
             ]);
             $user->roles()->attach($data['role_id']);
             $permissions = RolePermission::where('role_id', $data['role_id'])->get();

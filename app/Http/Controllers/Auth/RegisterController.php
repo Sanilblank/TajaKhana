@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\FrontController;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Notifications\NewUserNotification;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -62,12 +65,54 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    // protected function create(array $data)
+    // {
+    //     return User::create([
+    //         'name' => $data['name'],
+    //         'email' => $data['email'],
+    //         'password' => Hash::make($data['password']),
+    //     ]);
+    // }
+
+    public function register(Request $request)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+        $this->validate($request, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
+
+        $user = new User();
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        $user->password = Hash::make($request->password);
+        $user->verification_code = sha1(time());
+        $user->save();
+
+        $user->roles()->attach(3);
+
+
+        if($user != null)
+        {
+            FrontController::verifyEmail($user->name, $user->email, $user->verification_code);
+
+            return redirect()->route('index')->with('success', 'Your account has been created, Please check your email for activation.');
+        }
+        return redirect()->route('index')->with('error', 'Something is wrong.');
+    }
+
+    public function verifyUser(){
+        $verification_code = \Illuminate\Support\Facades\Request::get('code');
+        $user = User::where('verification_code', $verification_code)->first();
+        if( $user != null)
+        {
+            $user->is_verified = 1;
+            $user->save();
+            $user->notify(new NewUserNotification($user));
+            return redirect()->route('index')->with('success', 'Your account is activated. Please login.');
+        }
+        return redirect()->route('index')->with('error', 'Something is wrong.');
     }
 }

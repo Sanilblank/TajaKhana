@@ -142,6 +142,7 @@ class DriverController extends Controller
             'name' => $data['fullname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'is_verified' => 1,
         ]);
         $user->roles()->attach(4);
             $user->save();
