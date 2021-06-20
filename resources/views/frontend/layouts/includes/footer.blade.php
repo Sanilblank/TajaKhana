@@ -4,11 +4,12 @@
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="footer__widget">
-                    <h6>WORKING HOURS</h6>
+                    <h6>BRANCH INFO</h6>
                     <ul>
-                        <li>Monday - Friday: 08:00 am – 08:30 pm</li>
-                        <li>Saturday: 10:00 am – 16:30 pm</li>
-                        <li>Sunday: 10:00 am – 16:30 pm</li>
+                        <li>{{$branch->branchname}}</li>
+                        <li>Location: {{$branch->branchlocation}}</li>
+                        <li>Phone: {{$branch->phone}}</li>
+
                     </ul>
                 </div>
             </div>
@@ -20,10 +21,10 @@
                     <p>Lorem ipsum dolor amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                     labore dolore magna aliqua.</p>
                     <div class="footer__social">
-                        <a href="#"><i class="fa fa-facebook"></i></a>
-                        <a href="#"><i class="fa fa-twitter"></i></a>
-                        <a href="#"><i class="fa fa-instagram"></i></a>
-                        <a href="#"><i class="fa fa-youtube-play"></i></a>
+                        <a href="{{$setting->facebook}}" target="_blank"><i class="fa fa-facebook"></i></a>
+                        <a href="{{$setting->linkedin}}" target="_blank"><i class="fa fa-linkedin"></i></a>
+                        <a href="{{$setting->instagram}}" target="_blank"><i class="fa fa-instagram"></i></a>
+                        <a href="{{$setting->youtube}}" target="_blank"><i class="fa fa-youtube-play"></i></a>
                     </div>
                 </div>
             </div>

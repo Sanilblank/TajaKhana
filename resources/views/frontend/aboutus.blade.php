@@ -27,15 +27,15 @@
     <!-- About Section Begin -->
     <section class="about spad">
         <div class="container">
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-lg-12">
                     <div class="about__video set-bg" data-setbg="{{asset('frontend/img/about-video.jpg')}}">
                         <a href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&list=RD8PJ3_p7VqHw&start_radio=1"
                         class="play-btn video-popup"><i class="fa fa-play"></i></a>
                     </div>
                 </div>
-            </div>
-            <div class="row">
+            </div> --}}
+            {{-- <div class="row">
                 <div class="col-lg-6 col-md-6">
                     <div class="about__text">
                         <div class="section-title">
@@ -70,6 +70,11 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div> --}}
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    {!! $setting->aboutus !!}
                 </div>
             </div>
         </div>
@@ -244,62 +249,23 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-3  col-md-6 col-sm-6">
-                    <div class="team__item set-bg" data-setbg="{{asset('frontend/img/team/team-1.jpg')}}">
-                        <div class="team__item__text">
-                            <h6>Randy Butler</h6>
-                            <span>Decorater</span>
-                            <div class="team__item__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
-                                <a href="#"><i class="fa fa-youtube-play"></i></a>
+                @foreach ($chefs as $chef)
+                    <div class="col-lg-3  col-md-6 col-sm-6">
+                        <div class="team__item set-bg" data-setbg="{{Storage::disk('uploads')->url($chef->photo)}}">
+                            <div class="team__item__text">
+                                <h6>{{$chef->name}}</h6>
+                                <span>{{$chef->branch->branchlocation}}</span>
+                                <div class="team__item__social">
+                                    <a href="#"><i class="fa fa-facebook"></i></a>
+                                    <a href="#"><i class="fa fa-twitter"></i></a>
+                                    <a href="#"><i class="fa fa-instagram"></i></a>
+                                    <a href="#"><i class="fa fa-youtube-play"></i></a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3  col-md-6 col-sm-6">
-                    <div class="team__item set-bg" data-setbg="{{asset('frontend/img/team/team-2.jpg')}}">
-                        <div class="team__item__text">
-                            <h6>Randy Butler</h6>
-                            <span>Decorater</span>
-                            <div class="team__item__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
-                                <a href="#"><i class="fa fa-youtube-play"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3  col-md-6 col-sm-6">
-                    <div class="team__item set-bg" data-setbg="{{asset('frontend/img/team/team-3.jpg')}}">
-                        <div class="team__item__text">
-                            <h6>Randy Butler</h6>
-                            <span>Decorater</span>
-                            <div class="team__item__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
-                                <a href="#"><i class="fa fa-youtube-play"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3  col-md-6 col-sm-6">
-                    <div class="team__item set-bg" data-setbg="{{asset('frontend/img/team/team-4.jpg')}}">
-                        <div class="team__item__text">
-                            <h6>Randy Butler</h6>
-                            <span>Decorater</span>
-                            <div class="team__item__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
-                                <a href="#"><i class="fa fa-youtube-play"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
+
             </div>
         </div>
     </section>

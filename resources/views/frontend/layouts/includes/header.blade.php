@@ -12,7 +12,7 @@
                 <a href="#"><img src="{{asset('frontend/img/icon/heart.png')}}" alt=""></a>
             </div>
             <div class="offcanvas__cart__item">
-                <a href="#"><img src="{{asset('frontend/img/icon/cart.png')}}" alt=""> <span>0</span></a>
+                <a href="{{route('cart')}}"><img src="{{asset('frontend/img/icon/cart.png')}}" alt=""> <span>0</span></a>
                 <div class="cart__price">Cart: <span>$0.00</span></div>
             </div>
         </div>
@@ -96,13 +96,13 @@
                                     <a href="#"><img src="{{asset('frontend/img/icon/heart.png')}}" alt=""></a>
                                 </div>
                                 <div class="header__top__right__cart">
-                                    <a href="#"><img src="{{asset('frontend/img/icon/cart.png')}}" alt=""> <span>0</span></a>
-
-
-
-
-
-                                    <div class="cart__price">Cart: <span>$0.00</span></div>
+                                    @if (Auth::guest())
+                                        <a href="javascript:void(0)" onclick="openLoginModal();"><img src="{{asset('frontend/img/icon/cart.png')}}" alt=""> <span>0</span></a>
+                                        <div class="cart__price">Cart: <span>$0.00</span></div>
+                                    @else
+                                        <a href="{{route('cart')}}"><img src="{{asset('frontend/img/icon/cart.png')}}" alt=""> <span>0</span></a>
+                                        <div class="cart__price">Cart</div>
+                                    @endif
                                 </div>
 
 
@@ -120,7 +120,7 @@
                         <ul>
                             <li class="active"><a href="{{route('index')}}">Home</a></li>
                             <li><a href="{{route('aboutus')}}">About</a></li>
-                            <li><a href="./shop.html">Shop</a></li>
+                            <li><a href="{{route('shop', [$branch->id, $branch->branchlocation])}}">Shop</a></li>
                             <li><a href="./location.html">Chef/Location</a></li>
                             <li><a href="#">Pages</a>
                                 <ul class="dropdown">

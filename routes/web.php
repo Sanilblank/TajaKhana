@@ -29,7 +29,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontController::class, 'index'])->name('index');
 Route::get('/aboutus', [FrontController::class, 'aboutus'])->name('aboutus');
-Route::get('/shop', [FrontController::class, 'shop'])->name('shop');
+
+//Shop
+Route::get('/shop/{id}/{location}', [FrontController::class, 'shop'])->name('shop');
+Route::get('/changebranch', [FrontController::class, 'changebranch'])->name('changebranch');
+Route::get('/shopdetails/{id}/{slug}', [FrontController::class, 'shopdetails'])->name('shopdetails');
+
+//Cart
+Route::post('/addtocart/{id}', [FrontController::class, 'addtocart'])->name('addtocart');
+Route::get('/cart', [FrontController::class, 'cart'])->name('cart');
+Route::put('/updatequantity/{id}', [FrontController::class, 'updatequantity'])->name('updatequantity');
+Route::get('/removefromcart/{id}', [FrontController::class, 'removefromcart'])->name('removefromcart');
+
+
+
 
 
 Auth::routes();

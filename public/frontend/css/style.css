@@ -4460,3 +4460,17 @@ box-shadow: 0px 1px 8px -4px  #888888;
 	display: block;
 	width: auto;
 }
+
+.product__item__price {
+    font-size: 18px;
+    color: #00b135;
+    font-weight: 700;
+}
+.product__item__price span {
+    display: inline-block;
+    color: #e40000;
+    font-weight: 400;
+    text-decoration: line-through;
+    margin-left: 10px;
+}
+
