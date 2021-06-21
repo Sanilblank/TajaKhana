@@ -84,7 +84,7 @@
                             <div class="food__item__price h5">Rs.{{$selecteditem->price}}</div>
                         @endif
 
-                        <p>{!! $selecteditem->details !!}</p>
+                        {{-- <p>{!! $selecteditem->details !!}</p> --}}
                         <ul>
                             <li>Amount: <span>{{$selecteditem->quantity}} {{$selecteditem->unit}}</span></li>
                             <li>Branch Location: <span>{{$selectedbranch->branchlocation}}</span></li>
@@ -135,34 +135,54 @@
                 <div class="col-lg-12">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Description</a>
+                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Item Description</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Additional information</a>
+                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Chef Details</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Previews(1)</a>
+                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Reviews</a>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="tabs-1" role="tabpanel">
                             <div class="row d-flex justify-content-center">
                                 <div class="col-lg-8">
-                                    <p>This delectable Strawberry Pie is an extraordinary treat filled with sweet and
-                                        tasty chunks of delicious strawberries. Made with the freshest ingredients, one
-                                        bite will send you to summertime. Each gift arrives in an elegant gift box and
-                                    arrives with a greeting card of your choice that you can personalize online!</p>
+                                    <p>{!! $selecteditem->details !!}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane" id="tabs-2" role="tabpanel">
                             <div class="row d-flex justify-content-center">
                                 <div class="col-lg-8">
-                                    <p>This delectable Strawberry Pie is an extraordinary treat filled with sweet and
-                                        tasty chunks of delicious strawberries. Made with the freshest ingredients, one
-                                        bite will send you to summertime. Each gift arrives in an elegant gift box and
-                                        arrives with a greeting card of your choice that you can personalize online!2
-                                    </p>
+                                    @if (!$chefresponsible)
+                                        <p>
+                                           Responsibility of item has not been assigned yet.
+                                        </p>
+                                    @else
+                                        <div class="row p-3">
+                                            <div class="col-md-6">
+                                                <p>Chef Name: {{$chefresponsible->chef->name}} <br> Chef Name: {{$chefresponsible->chef->contact}}</p>
+                                                <div class="team__item__social text-center">
+                                                    <a href="{{$chefresponsible->chef->facebook}}" target="_blank"><i class="fa fa-facebook"></i></a>
+                                                    <a href="{{$chefresponsible->chef->linkedin}}" target="_blank"><i class="fa fa-linkedin"></i></a>
+                                                    <a href="{{$chefresponsible->chef->instagram}}" target="_blank"><i class="fa fa-instagram"></i></a>
+                                                    <a href="{{$chefresponsible->chef->youtube}}" target="_blank"><i class="fa fa-youtube-play"></i></a>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-6 text-center">
+                                                <img src="{{Storage::disk('uploads')->url($chefresponsible->chef->photo)}}" style="max-width:100px">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p>{!! $chefresponsible->chef->details !!}</p>
+                                            </div>
+                                        </div>
+                                    @endif
+
                                 </div>
                             </div>
                         </div>

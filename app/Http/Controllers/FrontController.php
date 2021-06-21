@@ -8,6 +8,7 @@ use App\Models\BranchMenu;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Chef;
+use App\Models\ChefResponsibility;
 use App\Models\Menuitem;
 use App\Models\MenuitemImage;
 use App\Models\Setting;
@@ -76,6 +77,7 @@ class FrontController extends Controller
         $selecteditem = Menuitem::where('id', $branchmenuitem->menuitem_id)->first();
         $itemimages = MenuitemImage::where('menuitem_id', $selecteditem->id)->get();
         $itemimage = MenuitemImage::where('menuitem_id', $selecteditem->id)->first();
+        $chefresponsible = ChefResponsibility::where('branch_id', $selectedbranch->id)->where('branchmenu_id', $branchmenuitem->id)->first();
 
         $relateditems = array();
         $itemcategories = $selecteditem->category_id;
@@ -94,7 +96,7 @@ class FrontController extends Controller
             }
         }
 
-        return view('frontend.shopdetails', compact('selectedbranch', 'selecteditem', 'itemimages', 'itemimage', 'relateditems', 'branchmenuitem'));
+        return view('frontend.shopdetails', compact('selectedbranch', 'selecteditem', 'itemimages', 'itemimage', 'relateditems', 'branchmenuitem', 'chefresponsible'));
     }
 
     public function addtocart(Request $request, $id)

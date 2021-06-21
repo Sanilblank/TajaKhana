@@ -256,10 +256,10 @@
                                 <h6>{{$chef->name}}</h6>
                                 <span>{{$chef->branch->branchlocation}}</span>
                                 <div class="team__item__social">
-                                    <a href="#"><i class="fa fa-facebook"></i></a>
-                                    <a href="#"><i class="fa fa-twitter"></i></a>
-                                    <a href="#"><i class="fa fa-instagram"></i></a>
-                                    <a href="#"><i class="fa fa-youtube-play"></i></a>
+                                    <a href="{{$chef->facebook}}" target="_blank"><i class="fa fa-facebook"></i></a>
+                                    <a href="{{$chef->linkedin}}" target="_blank"><i class="fa fa-linkedin"></i></a>
+                                    <a href="{{$chef->instagram}}" target="_blank"><i class="fa fa-instagram"></i></a>
+                                    <a href="{{$chef->youtube}}" target="_blank"><i class="fa fa-youtube-play"></i></a>
                                 </div>
                             </div>
                         </div>
