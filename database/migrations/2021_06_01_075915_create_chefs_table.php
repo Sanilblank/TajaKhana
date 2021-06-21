@@ -22,6 +22,11 @@ class CreateChefsTable extends Migration
             $table->string('name');
             $table->string('photo');
             $table->longText('details');
+            $table->string('contact');
+            $table->string('facebook')->nullable();
+            $table->string('linkedin')->nullable();
+            $table->string('youtube')->nullable();
+            $table->string('instagram')->nullable();
             $table->timestamps();
         });
     }

@@ -34,16 +34,8 @@ class BranchController extends Controller
                             }
                             return $status;
                         })
-                        ->addColumn('chefname', function ($row) {
-                            $chef = Chef::where('branch_id', $row->id)->first();
-                            return $chef->name;
-                        })
-                        ->addColumn('chefphoto', function ($row) {
-                            $chef = Chef::where('branch_id', $row->id)->first();
-                            $photo = Storage::disk('uploads')->url($chef->photo);
-                            $img = "<img src = '$photo' style='max-height:100px'>";
-                            return $img;
-                        })
+
+
                         ->addColumn('branchimage', function ($row) {
                             $photo = Storage::disk('uploads')->url($row->branchimage);
                             $img = "<img src = '$photo' style='max-height:100px'>";
@@ -66,7 +58,7 @@ class BranchController extends Controller
 
                                 return $btn;
                         })
-                        ->rawColumns(['status', 'chefname', 'chefphoto', 'branchimage', 'action'])
+                        ->rawColumns(['status', 'branchimage', 'action'])
                         ->make(true);
             }
             return view('backend.branch.index');
@@ -106,9 +98,6 @@ class BranchController extends Controller
             'longitude' => 'required',
             'phone' => 'required',
             'status' => 'required',
-            'name' => 'required',
-            'photo' => 'required|mimes: jpg,png,jpeg',
-            'details' => 'required',
             'branchimage' => 'required|mimes: jpg,png,jpeg',
         ]);
 
@@ -117,12 +106,6 @@ class BranchController extends Controller
         {
             return back()->with('failure', 'Branch at that location with same name already exists.');
         }
-
-        $photoname = '';
-            if($request->hasfile('photo')){
-                $image = $request->file('photo');
-                $photoname = $image->store('chef_images', 'uploads');
-            }
 
             $branchimage = '';
             if($request->hasfile('branchimage')){
@@ -140,15 +123,7 @@ class BranchController extends Controller
             'branchimage' => $branchimage,
         ]);
 
-        $chef = Chef::create([
-            'branch_id' => $branch->id,
-            'name' => $data['name'],
-            'photo' => $photoname,
-            'details' => $data['details'],
-        ]);
-
         $branch->save();
-        $chef->save();
         return redirect()->route('branch.index')->with('success', 'Branch Created Successfully.');
     }
 
@@ -174,8 +149,7 @@ class BranchController extends Controller
         //
         if ($request->user()->can('manage-branch')) {
             $branch = Branch::findorfail($id);
-            $chef = Chef::where('branch_id', $id)->first();
-            return view('backend.branch.edit', compact('branch', 'chef'));
+            return view('backend.branch.edit', compact('branch'));
         }else{
             return view('backend.permission.permission');
         }
@@ -199,22 +173,9 @@ class BranchController extends Controller
             'longitude' => 'required',
             'phone' => 'required',
             'status' => 'required',
-            'name' => 'required',
-            'photo' => 'mimes:png,jpg,jpeg',
-            'details' => 'required',
             'branchimage' => 'mimes:png,jpg,jpeg',
 
         ]);
-
-        $photoname = '';
-            if($request->hasfile('photo')){
-                Storage::disk('uploads')->delete($chef->photo);
-                $image = $request->file('photo');
-                $photoname = $image->store('chef_images', 'uploads');
-            }
-            else {
-                $photoname = $chef->photo;
-            }
 
             $branchimage = '';
             if($request->hasfile('branchimage')){
@@ -235,11 +196,6 @@ class BranchController extends Controller
             'branchimage' => $branchimage,
         ]);
 
-        $chef->update([
-            'name' => $data['name'],
-            'photo' => $photoname,
-            'details' => $data['details'],
-        ]);
         return redirect()->route('branch.index')->with('success', 'Branch Updated Successfully.');
     }
 

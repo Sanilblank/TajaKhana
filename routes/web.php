@@ -4,6 +4,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchMenuController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChefController;
+use App\Http\Controllers\ChefResponsibilityController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\MenuitemController;
@@ -58,14 +60,28 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
     Route::resource('category', CategoryController::class);
 
 
+    //Branch
     Route::resource('branch', BranchController::class);
+
+    //Branch Menu
     Route::get('/branchmenu/{id}', [BranchMenuController::class, 'index'])->name('branchmenu.index');
     Route::get('/branchmenu/create/{id}', [BranchMenuController::class, 'create'])->name('branchmenu.create');
     Route::resource('branchmenu', BranchMenuController::class, ['except' => ['index', 'create']]);
 
+    //Chef
+    Route::resource('chef', ChefController::class);
+    Route::get('/chefresponsibility/{id}', [ChefResponsibilityController::class, 'index'])->name('chefresponsibility.index');
+    Route::get('/chefresponsibility/create/{id}', [ChefResponsibilityController::class, 'create'])->name('chefresponsibility.create');
+    Route::resource('chefresponsibility', ChefResponsibilityController::class, ['except' => ['index', 'create']]);
+
+    //Driver
     Route::resource('driver', DriverController::class);
+
+    //Menu Item
     Route::resource('menuitem', MenuitemController::class);
 
+
+    //Settings
     Route::resource('setting', SettingController::class);
     Route::resource('slider', SliderController::class);
 

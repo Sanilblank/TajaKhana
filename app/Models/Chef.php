@@ -13,6 +13,11 @@ class Chef extends Model
         'name',
         'photo',
         'details',
+        'contact',
+        'facebook',
+        'linkedin',
+        'youtube',
+        'instagram',
     ];
 
     public function branch()

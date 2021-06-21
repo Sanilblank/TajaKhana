@@ -30,8 +30,6 @@
                         <th class="text-center">Latitude</th>
                         <th class="text-center">Longitude</th>
                         <th class="text-center">Contact No</th>
-                        <th class="text-center">Chef</th>
-                        <th class="text-center">Photo</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Action</th>
                     </tr>
@@ -63,8 +61,6 @@
               {data: 'latitude', name: 'latitude'},
               {data: 'longitude', name: 'longitude'},
               {data: 'phone', name: 'phone'},
-              {data: 'chefname', name: 'chefname'},
-              {data: 'chefphoto', name: 'chefphoto'},
               {data: 'status', name: 'status'},
               {
                   data: 'action',

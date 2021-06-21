@@ -90,40 +90,6 @@
                             </div>
                         </div>
                     </div>
-                    <p class="h4 mt-3">Chef Information</p>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="name">Name: </label>
-                                <input type="text" name="name" class="form-control" value="{{@old('name')}}" placeholder="Enter Name of Chef">
-                                @error('name')
-                                    <p class="text-danger">{{$message}}</p>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="photo">Photo: </label>
-                                <input type="file" name="photo" class="form-control">
-                                @error('photo')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="details">Details:</label>
-                                <textarea name="details" class="form-control" id="details" cols="30" rows="10"
-                                    placeholder="Enter Chef Details"></textarea>
-
-                                @error('details')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="row mt-4">
                         <div class="col-6">

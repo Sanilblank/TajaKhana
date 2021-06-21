@@ -86,6 +86,12 @@
                       <li><a href="{{ route('branch.create') }}">Create Branch</a></li>
                     </ul>
                   </li>
+                  <li><a><i class="fa fa-user"></i> Chefs/Employees<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="{{ route('chef.index') }}">View Employees</a></li>
+                      <li><a href="{{ route('chef.create') }}">Create Employee</a></li>
+                    </ul>
+                  </li>
                   <li><a href="{{ route('category.index') }}"><i class="fa fa-list"></i> Item Categories</a></li>
                   <li><a><i class="fa fa-chevron-circle-down"></i> Menu Items<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
