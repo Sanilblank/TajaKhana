@@ -9,6 +9,7 @@ use App\Http\Controllers\ChefResponsibilityController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\MenuitemController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
@@ -43,8 +44,9 @@ Route::get('/cart', [FrontController::class, 'cart'])->name('cart');
 Route::put('/updatequantity/{id}', [FrontController::class, 'updatequantity'])->name('updatequantity');
 Route::get('/removefromcart/{id}', [FrontController::class, 'removefromcart'])->name('removefromcart');
 
-
-
+//Checkout
+Route::get('/checkout/{id}', [FrontController::class, 'checkout'])->name('checkout');
+Route::post('/placeorder', [FrontController::class, 'placeorder'])->name('placeorder');
 
 
 Auth::routes();
@@ -80,6 +82,14 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
     //Menu Item
     Route::resource('menuitem', MenuitemController::class);
 
+    //Order
+    Route::resource('order', OrderController::class);
+    Route::put('/addproductorder', [OrderController::class, 'addproductorder'])->name('addproductorder');
+    Route::get('/deletefromorder/{id}', [OrderController::class, 'deletefromorder'])->name('deletefromorder');
+    Route::put('/updatequantityadmin/{id}', [OrderController::class, 'updatequantityadmin'])->name('updatequantityadmin');
+    Route::put('/editaddress/{id}', [OrderController::class, 'editaddress'])->name('editaddress');
+    Route::put('/changeOrderStatus/{id}', [OrderController::class, 'changeOrderStatus'])->name('changeOrderStatus');
+    Route::put('/productorder', [OrderController::class, 'productorder'])->name('productorder');
 
     //Settings
     Route::resource('setting', SettingController::class);

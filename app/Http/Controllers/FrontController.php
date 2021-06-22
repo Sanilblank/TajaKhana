@@ -9,10 +9,14 @@ use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Chef;
 use App\Models\ChefResponsibility;
+use App\Models\DeliveryAddress;
 use App\Models\Menuitem;
 use App\Models\MenuitemImage;
+use App\Models\Order;
+use App\Models\OrderedProducts;
 use App\Models\Setting;
 use App\Models\Slider;
+use App\Notifications\NewOrderNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -144,5 +148,93 @@ class FrontController extends Controller
         $cart->delete();
 
         return redirect()->back()->with('success', 'Item is removed from cart successfully.');
+    }
+
+    public function checkout($id)
+    {
+        $cartitems = Cart::where('user_id', $id)->get();
+        if(count($cartitems) == 0)
+        {
+            return redirect()->back()->with('failure', 'No products in your cart.');
+        }
+
+        return view('frontend.checkout', compact('cartitems'));
+    }
+
+    public function placeorder(Request $request)
+    {
+        $data = $this->validate($request, [
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'address' => 'required',
+            'town' => 'required',
+            'district' => 'required',
+            'postcode' => 'required',
+            'phone' => 'required',
+            'email' => 'required|email'
+          ]);
+
+          $address = DeliveryAddress::where('user_id', Auth::user()->id)->first();
+            if($address) {
+                $delivery_address = DeliveryAddress::create([
+                    'user_id' => Auth::user()->id,
+                    'firstname' => $data['firstname'],
+                    'lastname' => $data['lastname'],
+                    'address' => $data['address'],
+                    'town' => $data['town'],
+                    'district' => $data['district'],
+                    'postcode' => $data['postcode'],
+                    'phone' => $data['phone'],
+                    'email' => $data['email'],
+                    'is_default' => 0
+                ]);
+            }else {
+                $delivery_address = DeliveryAddress::create([
+                    'user_id' => Auth::user()->id,
+                    'firstname' => $data['firstname'],
+                    'lastname' => $data['lastname'],
+                    'address' => $data['address'],
+                    'town' => $data['town'],
+                    'district' => $data['district'],
+                    'postcode' => $data['postcode'],
+                    'phone' => $data['phone'],
+                    'email' => $data['email'],
+                    'is_default' => 1
+                ]);
+            }
+
+            $delivery_address->save();
+            $monthyear = date('F, Y');
+
+            $order = Order::create([
+                'user_id' => Auth::user()->id,
+                'delivery_address_id' => $delivery_address->id,
+                'status_id' => 1,
+                'monthyear'=>$monthyear,
+            ]);
+
+            $order->save();
+            $order->notify(new NewOrderNotification($order));
+
+            $cartproducts = Cart::where('user_id', Auth::user()->id)->get();
+
+            foreach($cartproducts as $cartproduct)
+            {
+                $branchmenu = BranchMenu::where('id', $cartproduct->branchmenu_id)->first();
+
+                $ordered_products = OrderedProducts::create([
+                    'user_id' => Auth::user()->id,
+                    'order_id' => $order->id,
+                    'branch_id' => $branchmenu->branch_id,
+                    'menuitem_id' => $branchmenu->menuitem_id,
+                    'quantity' => $cartproduct->quantity,
+                    'price' => $cartproduct->price,
+                    'status_id' => 1,
+                    'monthyear' => $monthyear
+                ]);
+                $ordered_products->save();
+                $cartproduct->delete();
+            }
+            return redirect()->route('index')->with('success', 'Thank you for ordering. We will call you soon.');
     }
 }

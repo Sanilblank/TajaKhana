@@ -44,6 +44,10 @@ class UserPermissionTableSeeder extends Seeder
                 'user_id' => 1,
                 'permission_id' => 7,
             ],
+            [
+                'user_id' => 1,
+                'permission_id' => 8,
+            ],
         ]);
     }
 }

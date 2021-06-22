@@ -49,9 +49,9 @@
                                         @foreach ($cartitems as $item)
                                             @php
                                                 $branchmenu = DB::table('branch_menus')->where('id', $item->branchmenu_id)->first();
-                                            $branchinfo = DB::table('branches')->where('id', $branchmenu->branch_id)->first();
-                                            $menuitem = DB::table('menuitems')->where('id', $branchmenu->menuitem_id)->first();
-                                            $menuitemimage = DB::table('menuitem_images')->where('menuitem_id', $menuitem->id)->first();
+                                                $branchinfo = DB::table('branches')->where('id', $branchmenu->branch_id)->first();
+                                                $menuitem = DB::table('menuitems')->where('id', $branchmenu->menuitem_id)->first();
+                                                $menuitemimage = DB::table('menuitem_images')->where('menuitem_id', $menuitem->id)->first();
 
                                             @endphp
                                             <tr>
@@ -129,10 +129,11 @@
                                 @endphp
                                 <li>Subtotal <span>Rs. {{$grandtotal}}</span></li>
                                 <li>Total <span>Rs. {{$grandtotal}}</span></li>
+                                <li class="text-danger mt-3">Note*: Delivery charge will be applied according to distance.</li>
                             @endif
 
                         </ul>
-                        <a href="#" class="primary-btn">Proceed to checkout</a>
+                        <a href="{{route('checkout', Auth::user()->id)}}" class="primary-btn">Proceed to checkout</a>
                     </div>
                 </div>
             </div>

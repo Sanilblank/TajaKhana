@@ -99,6 +99,12 @@
                       <li><a href="{{route('menuitem.create')}}">Create Menu Item</a></li>
                     </ul>
                   </li>
+                  <li><a><i class="fa fa-exchange"></i>Orders <span
+                    class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li><a href="{{ route('order.index') }}">All Orders</a></li>
+                    </ul>
+                  </li>
                 </ul>
               </div>
               <div class="menu_section">
@@ -187,6 +193,7 @@
                 @php
                     $newnotifications = DB::table('notifications')->where('is_read', 0)->count();
                     $newuser = DB::table('notifications')->where('type','App\Notifications\NewUserNotification')->where('is_read', 0)->count();
+                    $neworder = DB::table('notifications')->where('type','App\Notifications\NewOrderNotification')->where('is_read', 0)->count();
                 @endphp
                 <li role="presentation" class="nav-item dropdown open">
                   <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
@@ -200,6 +207,15 @@
 
                                 <span>
                                     <i class="fa fa-user"></i><span style="font-size: 15px;"> &nbsp;<b>{{$newuser}}</b> new user has just registerd.</span>
+                                </span>
+                            </a>
+                        </li>
+                      @endif
+                      @if ($neworder > 0)
+                        <li class="nav-item">
+                            <a class="dropdown-item" href="{{route('order.index')}}">
+                                <span>
+                                    <i class="fa fa-cutlery"></i><span style="font-size: 15px;"> &nbsp;<b>{{$neworder}}</b> new order has been received.</span>
                                 </span>
                             </a>
                         </li>

@@ -98,9 +98,12 @@
                                 <div class="header__top__right__cart">
                                     @if (Auth::guest())
                                         <a href="javascript:void(0)" onclick="openLoginModal();"><img src="{{asset('frontend/img/icon/cart.png')}}" alt=""> <span>0</span></a>
-                                        <div class="cart__price">Cart: <span>$0.00</span></div>
+                                        <div class="cart__price">Cart</div>
                                     @else
-                                        <a href="{{route('cart')}}"><img src="{{asset('frontend/img/icon/cart.png')}}" alt=""> <span>0</span></a>
+                                        @php
+                                            $noincart = DB::table('carts')->where('user_id', Auth::user()->id)->count();
+                                        @endphp
+                                        <a href="{{route('cart')}}"><img src="{{asset('frontend/img/icon/cart.png')}}" alt=""> <span>{{$noincart}}</span></a>
                                         <div class="cart__price">Cart</div>
                                     @endif
                                 </div>
