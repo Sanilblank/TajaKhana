@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EmailChangeVerification;
+use App\Mail\PasswordChangeVerification;
 use App\Mail\VerifyUserEmail;
 use App\Models\Branch;
 use App\Models\BranchMenu;
@@ -14,14 +16,18 @@ use App\Models\Menuitem;
 use App\Models\MenuitemImage;
 use App\Models\Order;
 use App\Models\OrderedProducts;
+use App\Models\Review;
 use App\Models\Setting;
 use App\Models\Slider;
+use App\Models\User;
 use App\Notifications\NewOrderNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Stevebauman\Location\Facades\Location;
-
+use Symfony\Component\HttpFoundation\Response;
 
 class FrontController extends Controller
 {
@@ -236,5 +242,252 @@ class FrontController extends Controller
                 $cartproduct->delete();
             }
             return redirect()->route('index')->with('success', 'Thank you for ordering. We will call you soon.');
+    }
+
+    public function addreview(Request $request)
+    {
+        $data = $this->validate($request, [
+            'star' => 'required',
+            'username' => 'required',
+            'chef_id' => 'required',
+        ]);
+
+        $review = Review::create([
+            'username' => $data['username'],
+            'user_id' => Auth::user()->id,
+            'chef_id' => $data['chef_id'],
+            'rating' => $data['star'],
+            'description' => $request['ratingdescription'],
+        ]);
+
+        $review->save();
+
+        return redirect()->back()->with('success', 'Review added successfully.');
+    }
+
+    public function updatereview(Request $request, $id)
+    {
+        $userreview = Review::findorfail($id);
+        $data = $this->validate($request, [
+            'star' => 'required',
+        ]);
+        $userreview->update([
+            'rating' => $data['star'],
+            'description' => $request['ratingdescription'],
+        ]);
+        $userreview->save();
+        return redirect()->back()->with('success', 'Review updated successfully');
+    }
+
+    public function deleteuserreview($id)
+    {
+        $userreview = Review::findorfail($id);
+        $userreview->delete();
+        return redirect()->back()->with('success', 'Review Deleted Successfully');
+    }
+
+    public function myaccount()
+    {
+        $user = User::where('id', Auth::user()->id)->first();
+        $title = $user->name;
+        $deliveryaddress = DeliveryAddress::where('user_id', $user->id)->where('is_default', 1)->first();
+
+        return view('frontend.myprofile.myaccount', compact('user', 'deliveryaddress'));
+    }
+
+    public function editcustomeraddress()
+    {
+        $address = DeliveryAddress::where('user_id', Auth::user()->id)->where('is_default', 1)->first();
+
+        return view('frontend.myprofile.editaddress', compact('address'));
+    }
+
+    public function updateaddress(Request $request, $id)
+    {
+        $data = $this->validate($request, [
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'district' => 'required',
+            'town' => 'required',
+            'postcode' => 'required',
+            'email'=>'required|email',
+        ]);
+
+        $address = DeliveryAddress::findorfail($id);
+
+        $address->update([
+            'firstname' => $data['firstname'],
+            'lastname' => $data['lastname'],
+            'address' => $data['address'],
+            'town' => $data['town'],
+            'district' => $data['district'],
+            'postcode' => $data['postcode'],
+            'phone' => $data['phone'],
+            'email' => $data['email'],
+
+        ]);
+        return redirect()->route('myaccount')->with('success', 'Address information Updated Successfully');
+    }
+
+    public function myprofile()
+    {
+        $user = User::where('id', Auth::user()->id)->first();
+        return view('frontend.myprofile.myprofile', compact( 'user'));
+    }
+
+    public function editinfo()
+    {
+        $user = User::where('id', Auth::user()->id)->first();
+        return view('frontend.myprofile.editinfo', compact( 'user'));
+    }
+
+    public function sendEmailChange(Request $request)
+    {
+        $user = Auth::user();
+
+        $data = $this->validate($request,[
+            'name'=>'required',
+            'email'=>'required|email',
+        ]);
+
+        Cookie::queue('emailcookie', $data['email'], 30);
+        Cookie::queue('namecookie', $data['name'], 30);
+
+
+        $mailData = [
+            'name' => $data['name'],
+            'verification_code' => $user->verification_code,
+        ];
+        Mail::to($data['email'])->send(new EmailChangeVerification($mailData));
+
+        return redirect()->back()->with('success', 'Please verify from your newly given email');
+    }
+
+    public function useremailchange()
+    {
+        $verification_code = \Illuminate\Support\Facades\Request::get('code');
+        $user = User::where('verification_code', $verification_code)->first();
+        if( $user != null)
+        {
+            $username = Cookie::get('namecookie');
+            $email = Cookie::get('emailcookie');
+
+            $user->name = $username;
+            $user->email = $email;
+            $user->save();
+
+            return redirect()->route('myprofile')->with('success', 'Your name and email has been changed as requested');
+        }
+        return redirect()->route('index')->with('error', 'Something is wrong.');
+    }
+
+    public function sendotpEmail()
+    {
+        $user = Auth::user();
+
+        $email = $user->email;
+
+        $otp = mt_rand(111111, 999999);
+
+        Cookie::queue('otpcookie', $otp, 10);
+
+        $mailData = [
+            'otp' => $otp,
+        ];
+
+        Mail::to($email)->send(new PasswordChangeVerification($mailData));
+
+        return view('frontend.myprofile.otpconfirmation');
+
+    }
+
+    public function otpvalidation(Request $request)
+    {
+        $data = $this->validate($request, [
+            'otpcode' => 'required|numeric',
+        ]);
+
+        $cookiedata = Cookie::get('otpcookie');
+
+        if($data['otpcode'] == $cookiedata) {
+
+            return view('frontend.myprofile.editpassword');
+        }
+        else {
+            return response()->json([
+                'error_message' => 'Your otp code didnt match.'
+            ], Response::HTTP_OK);
+        }
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $data = $this->validate($request,[
+            'oldpassword' =>  'required',
+            'newpassword' => 'required|min:8|confirmed|different:password',
+        ]);
+
+        $user = User::where('id', Auth::user()->id)->first();
+        if(Hash::check($data['oldpassword'], $user->password))
+        {
+            if(!Hash::check($data['newpassword'], $user->password))
+            {
+                $newpassword = Hash::make($data['newpassword']);
+                $user->update([
+                    'password' => $newpassword,
+                ]);
+                $user->save();
+                return redirect()->route('myprofile')->with('success', 'Password has been changed.');
+            }
+            else
+            {
+                return redirect()->back()
+                        ->with('samepass', 'Old password cannot be new password.');
+            }
+        }
+        else{
+            return redirect()->back()
+                    ->with('oldfailure', 'Your old password doesnot match our credentials.');
+        }
+    }
+
+    public function myorders()
+    {
+        $orders = Order::latest()->where('user_id', Auth::user()->id)->with('user', 'status')->get();
+        return view('frontend.myprofile.myorders', compact('orders'));
+    }
+
+    public function cancelorder(Request $request, $id)
+    {
+        $orderproduct = OrderedProducts::findorfail($id);
+
+        if ($request['reason'] == null) {
+            $data = $this->validate($request, [
+                'other' => 'required',
+            ]);
+            $reason = $data['other'];
+        } else {
+            $data = $this->validate($request, [
+                'reason' => 'required',
+            ]);
+            $reason = $data['reason'];
+        }
+
+        $orderproduct->update([
+            'status_id' => 6,
+            'reason' => $reason
+        ]);
+
+        return redirect()->back()->with('success', 'Cancellation successful.');
+    }
+
+    public function myreviews()
+    {
+        $user_id = Auth::user()->id;
+        $reviews = Review::where('user_id', $user_id)->latest()->simplePaginate(10);
+
+        return view('frontend.myprofile.myreviews', compact('reviews'));
     }
 }

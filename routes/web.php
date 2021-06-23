@@ -12,6 +12,7 @@ use App\Http\Controllers\MenuitemController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SliderController;
@@ -48,6 +49,25 @@ Route::get('/removefromcart/{id}', [FrontController::class, 'removefromcart'])->
 Route::get('/checkout/{id}', [FrontController::class, 'checkout'])->name('checkout');
 Route::post('/placeorder', [FrontController::class, 'placeorder'])->name('placeorder');
 
+//Review
+Route::post('/addreview', [FrontController::class, 'addreview'])->name('addreview');
+Route::put('/updatereview/{id}', [FrontController::class, 'updatereview'])->name('updatereview');
+Route::delete('/deleteuserreview/{id}', [FrontController::class, 'deleteuserreview'])->name('deleteuserreview');
+
+//User
+Route::get('/myaccount', [FrontController::class, 'myaccount'])->name('myaccount');
+Route::get('/editcustomeraddress', [FrontController::class, 'editcustomeraddress'])->name('editcustomeraddress');
+Route::put('/updateaddress/{id}', [FrontController::class, 'updateaddress'])->name('updateaddress');
+Route::get('/myprofile', [FrontController::class, 'myprofile'])->name('myprofile');
+Route::get('/editinfo', [FrontController::class, 'editinfo'])->name('editinfo');
+Route::get('/sendemailchange', [FrontController::class, 'sendemailchange'])->name('sendemailchange');
+Route::get('/useremailchange', [FrontController::class, 'useremailchange'])->name('user.emailchange');
+Route::get('/send-otpemail', [FrontController::class, 'sendotpEmail'])->name('sendotp');
+Route::get('/otpvalidation', [FrontController::class, 'otpvalidation'])->name('otpvalidation');
+Route::put('/updatepassword', [FrontController::class, 'updatePassword'])->name('updatepassword');
+Route::get('/myorders', [FrontController::class, 'myorders'])->name('myorders');
+Route::put('/cancelorder/{id}', [FrontController::class, 'cancelorder'])->name('cancelorder');
+Route::get('/myreviews', [FrontController::class, 'myreviews'])->name('myreviews');
 
 Auth::routes();
 
@@ -81,6 +101,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
     //Menu Item
     Route::resource('menuitem', MenuitemController::class);
+
+    //Review
+    Route::resource('review', ReviewController::class);
+    Route::put('enablereview/{id}', [ReviewController::class, 'enableurl'])->name('review.enable');
+    Route::put('disablereview/{id}', [ReviewController::class, 'disableurl'])->name('review.disable');
 
     //Order
     Route::resource('order', OrderController::class);

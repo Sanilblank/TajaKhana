@@ -26,6 +26,8 @@
     <link rel="stylesheet" href="{{asset('frontend/css/owl.carousel.min.css')}}" type="text/css">
     <link rel="stylesheet" href="{{asset('frontend/css/slicknav.min.css')}}" type="text/css">
     <link rel="stylesheet" href="{{asset('frontend/css/style.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{asset('frontend/css/rating.css')}}" type="text/css">
+
 
     <link href="{{asset('frontend/modalassets/css/login-register.css')}}" rel="stylesheet"/>
     @stack('styles')

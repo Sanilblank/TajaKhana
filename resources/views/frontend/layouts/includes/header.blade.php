@@ -67,12 +67,11 @@
                                         @elseif (Auth::user()->users_roles->role_id == 3)
                                             <a href="#">{{Auth::user()->name}}</a>
                                             <ul class="dropdown p-2">
-                                                <li><a href="./shop-details.html" style="color: whitesmoke">Shop Details</a></li>
-                                                <li><a href="./shoping-cart.html" style="color: whitesmoke">Shoping Cart</a></li>
-                                                <li><a href="./checkout.html" style="color: whitesmoke">Check Out</a></li>
-                                                <li><a href="./wisslist.html" style="color: whitesmoke">Wisslist</a></li>
-                                                <li><a href="./Class.html" style="color: whitesmoke">Class</a></li>
-                                                <li><a href="./blog-details.html" style="color: whitesmoke">Blog Details</a></li>
+                                                <li><a href="{{route('myaccount')}}" style="color: whitesmoke; display:block; padding:2px;">Account</a></li>
+                                                <li><a href="{{route('myprofile')}}" style="color: whitesmoke; display:block; padding:2px;">Profile</a></li>
+                                                <li><a href="{{route('myorders')}}" style="color: whitesmoke; display:block; padding:2px;">Orders</a></li>
+                                                <li><a href="{{route('cart')}}" style="color: whitesmoke; display:block; padding:2px;">Cart</a></li>
+                                                <li><a href="{{route('myreviews')}}" style="color: whitesmoke; display:block; padding:2px;">Reviews</a></li>
                                                 <li><form method="POST" action="{{ route('logout') }}">
                                                     @csrf
                                                     <a href="{{ route('logout') }}"

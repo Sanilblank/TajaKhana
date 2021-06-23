@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 @push('styles')
-
+    <link rel="stylesheet" href="{{asset('frontend/StarRating/min/jquery.rateyo.min.css')}}"/>
 @endpush
 
 @section('content')
@@ -25,6 +25,47 @@
         </div>
     </div>
     <!-- Breadcrumb End -->
+
+    {{-- Calculations for Review --}}
+    @if ($chefresponsible)
+        @php
+            $reviews = DB::table('reviews')->where('chef_id', $chefresponsible->chef_id)->where('disable', null)->orderBy('rating', 'DESC')->get();
+
+            $noofreviews = count($reviews);
+            $avgRatingFloat = DB::table('reviews')->where('chef_id', $chefresponsible->chef_id)->where('disable', null)->avg('rating');
+            $avgRating = number_format((float)$avgRatingFloat, 1, '.', '');
+            $noof5stars = DB::table('reviews')->where('chef_id', $chefresponsible->chef_id)->where('disable', null)->where('rating', 5)->count('rating');
+            $noof4stars = DB::table('reviews')->where('chef_id', $chefresponsible->chef_id)->where('disable', null)->where('rating', 4)->count('rating');
+            $noof3stars = DB::table('reviews')->where('chef_id', $chefresponsible->chef_id)->where('disable', null)->where('rating', 3)->count('rating');
+            $noof2stars = DB::table('reviews')->where('chef_id', $chefresponsible->chef_id)->where('disable', null)->where('rating', 2)->count('rating');
+            $noof1stars = DB::table('reviews')->where('chef_id', $chefresponsible->chef_id)->where('disable', null)->where('rating', 1)->count('rating');
+            if ($noofreviews == 0) {
+                $per5stars = 0;
+                $per4stars = 0;
+                $per3stars = 0;
+                $per2stars = 0;
+                $per1stars = 0;
+            }
+            else {
+                $percent5stars = ($noof5stars/$noofreviews) * 100 ;
+                $percent4stars = ($noof4stars/$noofreviews) * 100 ;
+                $percent3stars = ($noof3stars/$noofreviews) * 100 ;
+                $percent2stars = ($noof2stars/$noofreviews) * 100 ;
+                $percent1stars = ($noof1stars/$noofreviews) * 100 ;
+                $per5stars = number_format((float)$percent5stars, 1, '.', '');
+                $per4stars = number_format((float)$percent4stars, 1, '.', '');
+                $per3stars = number_format((float)$percent3stars, 1, '.', '');
+                $per2stars = number_format((float)$percent2stars, 1, '.', '');
+                $per1stars = number_format((float)$percent1stars, 1, '.', '');
+            }
+
+        @endphp
+    @else
+            @php
+                $avgRating = 0;
+            @endphp
+    @endif
+
 
     <!-- Shop Details Section Begin -->
     <section class="product-details spad">
@@ -141,7 +182,7 @@
                             <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Chef Details</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Reviews</a>
+                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Reviews for Chef</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -189,11 +230,298 @@
                         <div class="tab-pane" id="tabs-3" role="tabpanel">
                             <div class="row d-flex justify-content-center">
                                 <div class="col-lg-8">
-                                    <p>This delectable Strawberry Pie is an extraordinary treat filled with sweet and
-                                        tasty chunks of delicious strawberries. Made with the freshest ingredients, one
-                                        bite will send you to summertime. Each gift arrives in an elegant gift box and
-                                        arrives with a greeting card of your choice that you can personalize online!3
-                                    </p>
+                                    @if (!$chefresponsible)
+                                        <p>Responsibility of item has not been assigned yet.</p>
+                                    @else
+                                        <div class="mod-rating mt-3">
+                                            <div class="content">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <p style="font-size: 50px"><b>{{$avgRating}}</b><span style="font-size: 30px">/5</span></p>
+                                                        <div class="rateyo-readonly-widg"></div>
+                                                        <p>{{$noofreviews}} ratings</p>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                @for ($i = 5; $i > 0; $i--)
+                                                                    <i class="fa fa-star" style="font-size: 15px; color: orange;"></i>
+                                                                @endfor
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="progress" style="width: 300px; height: 15px; margin-top: 5px;">
+                                                                    <div class="progress-bar bg-warning" style="width:{{$per5stars}}%"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                {{$noof5stars}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                @for ($i = 4; $i > 0; $i--)
+                                                                    <i class="fa fa-star" style="font-size: 15px; color: orange;"></i>
+                                                                @endfor
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="progress" style="width: 300px; height: 15px; margin-top: 5px;">
+                                                                    <div class="progress-bar bg-warning" style="width:{{$per4stars}}%"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                {{$noof4stars}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                @for ($i = 3; $i > 0; $i--)
+                                                                    <i class="fa fa-star" style="font-size: 15px; color: orange;"></i>
+                                                                @endfor
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="progress" style="width: 300px; height: 15px; margin-top: 5px;">
+                                                                    <div class="progress-bar bg-warning" style="width:{{$per3stars}}%"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                {{$noof3stars}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                @for ($i = 2; $i > 0; $i--)
+                                                                    <i class="fa fa-star" style="font-size: 15px; color: orange;"></i>
+                                                                @endfor
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="progress" style="width: 300px; height: 15px; margin-top: 5px;">
+                                                                    <div class="progress-bar bg-warning" style="width:{{$per2stars}}%"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                {{$noof2stars}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                @for ($i = 1; $i > 0; $i--)
+                                                                    <i class="fa fa-star" style="font-size: 15px; color: orange;"></i>
+                                                                @endfor
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="progress" style="width: 300px; height: 15px; margin-top: 5px;">
+                                                                    <div class="progress-bar bg-warning" style="width:{{$per1stars}}%"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                {{$noof1stars}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="customer-review-option mt-4">
+                                            @if (Auth::guest())
+                                                <a href="javascript:void(0)" onclick="openLoginModal();" class="btn btn-primary" style="background-color: #f39c12; border: none;">Login to leave or modify Review</a>
+                                                <br><hr>
+                                            @else
+                                                @php
+                                                    $userreview = DB::table('reviews')->where('user_id', Auth::user()->id)->where('chef_id', $chefresponsible->chef_id)->first();
+                                                @endphp
+                                                @if ($userreview)
+                                                    <hr>
+                                                    <h5 style="color: #b83955; margin-bottom:1rem;">Your Review
+                                                        {{-- <a href="#" class="btn btn-success btn-sm ml-4">&nbsp; Edit &nbsp;</a> --}}
+                                                        <button type="button" class="btn btn-success btn-sm ml-4" data-toggle="modal" data-target="#editreviewModal{{$chefresponsible->chef_id . Auth::user()->id}}">&nbsp; Edit &nbsp;</button>
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" id="editreviewModal{{$chefresponsible->chef_id . Auth::user()->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                <h5 class="modal-title" id="editreviewModalLabel">Update your Review</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                                </div>
+                                                                <form action="{{route('updatereview', $userreview->id)}}" method="POST">
+                                                                    @csrf
+                                                                    @method('PUT')
+                                                                    <div class="modal-body">
+                                                                            <div class="form-group">
+                                                                                <div class="container d-flex justify-content-center">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-2">
+                                                                                        </div>
+                                                                                        <div class="col-md-9">
+                                                                                            <div class="stars">
+                                                                                                <input class="star star-5" id="starrating-5{{$chefresponsible->chef_id . Auth::user()->id}}" type="radio" name="star" value="5"
+
+                                                                                                @if ($userreview->rating == 5)
+                                                                                                    checked
+                                                                                                @endif />
+                                                                                                <label class="star star-5" for="starrating-5{{$chefresponsible->chef_id . Auth::user()->id}}"></label>
+                                                                                                <input class="star star-4" id="starrating-4{{$chefresponsible->chef_id . Auth::user()->id}}" type="radio" name="star" value="4"
+
+                                                                                                @if ($userreview->rating == 4)
+                                                                                                    checked
+                                                                                                @endif />
+                                                                                                <label class="star star-4" for="starrating-4{{$chefresponsible->chef_id . Auth::user()->id}}"></label>
+                                                                                                <input class="star star-3" id="starrating-3{{$chefresponsible->chef_id . Auth::user()->id}}" type="radio" name="star" value="3"
+
+                                                                                                @if ($userreview->rating == 3)
+                                                                                                    checked
+                                                                                                @endif />
+                                                                                                <label class="star star-3" for="starrating-3{{$chefresponsible->chef_id . Auth::user()->id}}"></label>
+                                                                                                <input class="star star-2" id="starrating-2{{$chefresponsible->chef_id . Auth::user()->id}}" type="radio" name="star" value="2"
+
+                                                                                                @if ($userreview->rating == 2)
+                                                                                                    checked
+                                                                                                @endif />
+                                                                                                <label class="star star-2" for="starrating-2{{$chefresponsible->chef_id . Auth::user()->id}}"></label>
+                                                                                                <input class="star star-1" id="starrating-1{{$chefresponsible->chef_id . Auth::user()->id}}" type="radio" name="star" value="1"
+
+                                                                                                @if ($userreview->rating == 1)
+                                                                                                    checked
+                                                                                                @endif />
+                                                                                                <label class="star star-1" for="starrating-1{{$chefresponsible->chef_id . Auth::user()->id}}"></label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-12">
+                                                                                            <textarea rows="4" cols="40" class="form-control" placeholder="Describe your experience (optional)" name="ratingdescription">{{$userreview->description}}</textarea>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Modal Ends -->
+
+                                                        <form action="{{route('deleteuserreview', $userreview->id)}}" method="POST" style="display: inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                                                        </form>
+                                                        </h5>
+
+
+                                                    <div class="co-item">
+                                                        <div class="avatar-text">
+                                                                <h5 style="color: #3B5998">{{$userreview->username}} - <span style="font-size: 15px">{{ \Carbon\Carbon::parse($userreview->updated_at)->diffForHumans() }}</span></h5>
+                                                                <div class="at-rating mb-2">
+                                                                    @for ($i = $userreview->rating; $i > 0; $i--)
+                                                                        <i class="fa fa-star" style="color: #ffc107"></i>
+                                                                    @endfor
+                                                                    @for ($i =5 - $userreview->rating; $i > 0; $i--)
+                                                                        <i class="fa fa-star-o" style="color: grey"></i>
+                                                                    @endfor
+                                                                </div>
+                                                                <div class="at-reply">{{$userreview->description}}</div>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <h5 style="color: #b83955">All Reviews</h5>
+                                                    <br>
+                                                @else
+                                                    {{-- <a href="#" class="btn btn-primary" style="background-color: #f39c12; border: none;">Leave a Review</a> --}}
+                                                    <button type="button" class="btn btn-primary" style="background-color: #f39c12; border: none;" data-toggle="modal" data-target="#reviewModal{{$chefresponsible->chef_id . Auth::user()->id}}">Leave a Review</button>
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="reviewModal{{$chefresponsible->chef_id . Auth::user()->id}}" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h5 class="modal-title" id="reviewModalLabel">Leave a Review</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            </div>
+                                                            <form action="{{route('addreview')}}" method="POST">
+                                                                @csrf
+                                                                <div class="modal-body">
+                                                                        <div class="form-group">
+                                                                            <div class="container d-flex justify-content-center">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-2">
+                                                                                    </div>
+                                                                                    <div class="col-md-9">
+                                                                                        <div class="stars">
+                                                                                            <input class="star star-5" id="star-5{{$chefresponsible->chef_id . Auth::user()->id}}" type="radio" name="star" value="5"/>
+                                                                                            <label class="star star-5" for="star-5{{$chefresponsible->chef_id . Auth::user()->id}}"></label>
+                                                                                            <input class="star star-4" id="star-4{{$chefresponsible->chef_id . Auth::user()->id}}" type="radio" name="star" value="4"/>
+                                                                                            <label class="star star-4" for="star-4{{$chefresponsible->chef_id . Auth::user()->id}}"></label>
+                                                                                            <input class="star star-3" id="star-3{{$chefresponsible->chef_id . Auth::user()->id}}" type="radio" name="star" value="3"/>
+                                                                                            <label class="star star-3" for="star-3{{$chefresponsible->chef_id . Auth::user()->id}}"></label>
+                                                                                            <input class="star star-2" id="star-2{{$chefresponsible->chef_id . Auth::user()->id}}" type="radio" name="star" value="2"/>
+                                                                                            <label class="star star-2" for="star-2{{$chefresponsible->chef_id . Auth::user()->id}}"></label>
+                                                                                            <input class="star star-1" id="star-1{{$chefresponsible->chef_id . Auth::user()->id}}" type="radio" name="star" value="1"/>
+                                                                                            <label class="star star-1" for="star-1{{$chefresponsible->chef_id . Auth::user()->id}}"></label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <input type="hidden" name="username" value="{{Auth::user()->name}}">
+                                                                                        <input type="hidden" name="chef_id" value="{{$chefresponsible->chef_id}}">
+                                                                                        <textarea rows="4" cols="40" class="form-control" placeholder="Describe your experience (optional)" name="ratingdescription"></textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Modal Ends -->
+                                                    <br><hr>
+                                                @endif
+
+                                            @endif
+                                            @if ($noofreviews == 0)
+                                                <p style="color: gray">No reviews for this chef</p>
+
+                                            @else
+                                                @if (count($reviews) == 0)
+                                                        <p style="color: gray">No reviews given by others for this chef</p>
+                                                @else
+                                                    @foreach ($reviews as $review)
+                                                            <div class="co-item">
+                                                                <div class="avatar-text">
+                                                                        <h5 style="color: #3B5998">{{$review->username}} - <span style="font-size: 15px">{{ \Carbon\Carbon::parse($review->updated_at)->diffForHumans() }}</span></h5>
+                                                                        <div class="at-rating mb-2">
+                                                                            @for ($i = $review->rating; $i > 0; $i--)
+                                                                                <i class="fa fa-star" style="color: #ffc107"></i>
+                                                                            @endfor
+                                                                            @for ($i =5 - $review->rating; $i > 0; $i--)
+                                                                                <i class="fa fa-star-o" style="color: grey"></i>
+                                                                            @endfor
+                                                                        </div>
+                                                                        <div class="at-reply">{{$review->description}}</div>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+
+                                                    @endforeach
+                                                @endif
+                                            @endif
+                                        </div>
+
+
+                                    @endif
+
                                 </div>
                             </div>
                         </div>
@@ -282,5 +610,37 @@
 
 @endsection
 @push('scripts')
+<script type="text/javascript" src="{{asset('frontend/StarRating/src/jquery.rateyo.js')}}"></script>
 
+<script>
+
+  $(function () {
+
+    var rating = {{$avgRating}};
+
+    $(".rateyos-readonly-widg").rateYo({
+
+      rating: rating,
+      numStars: 5,
+      precision: 2,
+      starWidth: "20px",
+      minValue: 1,
+      maxValue: 5
+    }).on("rateyo.change", function (e, data) {
+      console.log(data.rating);
+    });
+
+    $(".rateyo-readonly-widg").rateYo({
+
+        rating: rating,
+        numStars: 5,
+        precision: 2,
+        starWidth: "32px",
+        minValue: 1,
+        maxValue: 5
+        }).on("rateyo.change", function (e, data) {
+        console.log(data.rating);
+        });
+  });
+</script>
 @endpush
