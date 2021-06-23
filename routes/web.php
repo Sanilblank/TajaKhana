@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontController::class, 'index'])->name('index');
 Route::get('/aboutus', [FrontController::class, 'aboutus'])->name('aboutus');
+Route::get('/contact', [FrontController::class, 'contact'])->name('contact');
 
 //Shop
 Route::get('/shop/{id}/{location}', [FrontController::class, 'shop'])->name('shop');
@@ -68,6 +69,9 @@ Route::put('/updatepassword', [FrontController::class, 'updatePassword'])->name(
 Route::get('/myorders', [FrontController::class, 'myorders'])->name('myorders');
 Route::put('/cancelorder/{id}', [FrontController::class, 'cancelorder'])->name('cancelorder');
 Route::get('/myreviews', [FrontController::class, 'myreviews'])->name('myreviews');
+
+//Customer Email
+Route::get('/customerEmail', [FrontController::class, 'customerEmail'])->name('customerEmail');
 
 Auth::routes();
 

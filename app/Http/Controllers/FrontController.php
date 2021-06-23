@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CustomerEmail;
 use App\Mail\EmailChangeVerification;
 use App\Mail\PasswordChangeVerification;
 use App\Mail\VerifyUserEmail;
@@ -41,7 +42,15 @@ class FrontController extends Controller
         // $branch = Branch::where('status', 1)->distance($userlocation->latitude, $userlocation->longitude)->orderBy('distance', 'ASC')->first(); //Choose nearest branch
         $sliders = Slider::latest()->get();
         $branches = Branch::where('status', 1)->get();
-        return view('frontend.index', compact('branches', 'sliders'));
+        $chefs = Chef::latest()->take(4)->get();
+        $reviews = Review::where('disable', null)->latest()->orderBy('rating', 'DESC')->take(6)->get();
+        return view('frontend.index', compact('branches', 'sliders', 'chefs', 'reviews'));
+    }
+
+    public function contact()
+    {
+        $branches = Branch::latest()->where('status', 1)->get();
+        return view('frontend.contact', compact('branches'));
     }
 
     public static function verifyEmail($name, $email, $verification_code)
@@ -489,5 +498,26 @@ class FrontController extends Controller
         $reviews = Review::where('user_id', $user_id)->latest()->simplePaginate(10);
 
         return view('frontend.myprofile.myreviews', compact('reviews'));
+    }
+
+    public function customerEmail(Request $request)
+    {
+        $setting = Setting::first();
+        $email = $setting->email;
+        $data = $this->validate($request, [
+            'fullname'=>'required',
+            'customeremail'=>'required',
+            'message'=>'required',
+        ]);
+
+        $mailData = [
+            'fullname' => $request['fullname'],
+            'customeremail' => $request['customeremail'],
+            'message' => $request['message'],
+        ];
+
+        Mail::to($email)->send(new CustomerEmail($mailData));
+
+        return redirect()->back()->with('success', 'Thank you for messaging us. We will get back to you soon.');
     }
 }

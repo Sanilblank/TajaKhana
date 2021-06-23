@@ -8,14 +8,14 @@
     <section class="hero">
         <div class="hero__slider owl-carousel">
             @foreach ($sliders as $slider)
-            <div class="hero__item set-bg" data-setbg="{{Storage::disk('uploads')->url($slider->images)}}">
+            <div onclick="location.href='{{route('shop', [$branch->id, $branch->branchlocation])}}'" class="hero__item set-bg" data-setbg="{{Storage::disk('uploads')->url($slider->images)}}" style="cursor: pointer">
                 <div class="container">
                     <div class="row d-flex justify-content-center">
                         <div class="col-lg-8">
                             <div class="hero__text">
                                 <h2>{{$slider->title}}</h2>
                                 <p>{!! $slider->description !!}</p>
-                                <a href="#" class="primary-btn">Order Now</a>
+                                <a href="{{route('shop', [$branch->id, $branch->branchlocation])}}" class="primary-btn">Order Now</a>
                             </div>
                         </div>
                     </div>
@@ -51,10 +51,10 @@
 
                                     </div>
                                     <div class="cookbook__text">
-                                        <h5><a href="#">{{$mainbranch->branchlocation}}</a></h5>
+                                        <h5><a href="{{route('shop', [$mainbranch->id, $mainbranch->branchlocation])}}">{{$mainbranch->branchlocation}}</a></h5>
 
                                         <!-- <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p> -->
-                                        <a href="#" class="read_more">View Menu</a>
+                                        <a href="{{route('shop', [$mainbranch->id, $mainbranch->branchlocation])}}" class="read_more">View Menu</a>
                                     </div>
                                 </div>
                             @endforeach
@@ -465,72 +465,36 @@
                 <div class="col-lg-7 col-md-7 col-sm-7">
                     <div class="section-title">
                         <span>Our team</span>
-                        <h2>Sweet Baker </h2>
+                        <h2>Newest Members </h2>
                     </div>
                 </div>
-                <div class="col-lg-5 col-md-5 col-sm-5">
+                {{-- <div class="col-lg-5 col-md-5 col-sm-5">
                     <div class="team__btn">
                         <a href="#" class="primary-btn">Join Us</a>
                     </div>
-                </div>
+                </div> --}}
             </div>
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="team__item set-bg" data-setbg="{{asset('frontend/img/team/team-1.jpg')}}">
-                        <div class="team__item__text">
-                            <h6>Randy Butler</h6>
-                            <span>Decorater</span>
-                            <div class="team__item__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
-                                <a href="#"><i class="fa fa-youtube-play"></i></a>
+                @foreach ($chefs as $chef)
+                    <div class="col-lg-3  col-md-6 col-sm-6">
+                        <div class="team__item set-bg" data-setbg="{{Storage::disk('uploads')->url($chef->photo)}}">
+                            <div class="team__item__text">
+                                <h6>{{$chef->name}}</h6>
+                                <span>{{$chef->branch->branchlocation}}</span>
+                                <div class="team__item__social">
+                                    <a href="{{$chef->facebook}}" target="_blank"><i class="fa fa-facebook"></i></a>
+                                    <a href="{{$chef->linkedin}}" target="_blank"><i class="fa fa-linkedin"></i></a>
+                                    <a href="{{$chef->instagram}}" target="_blank"><i class="fa fa-instagram"></i></a>
+                                    <a href="{{$chef->youtube}}" target="_blank"><i class="fa fa-youtube-play"></i></a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="team__item set-bg" data-setbg="{{asset('frontend/img/team/team-2.jpg')}}">
-                        <div class="team__item__text">
-                            <h6>Randy Butler</h6>
-                            <span>Decorater</span>
-                            <div class="team__item__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
-                                <a href="#"><i class="fa fa-youtube-play"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="team__item set-bg" data-setbg="{{asset('frontend/img/team/team-3.jpg')}}">
-                        <div class="team__item__text">
-                            <h6>Randy Butler</h6>
-                            <span>Decorater</span>
-                            <div class="team__item__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
-                                <a href="#"><i class="fa fa-youtube-play"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="team__item set-bg" data-setbg="{{asset('frontend/img/team/team-4.jpg')}}">
-                        <div class="team__item__text">
-                            <h6>Randy Butler</h6>
-                            <span>Decorater</span>
-                            <div class="team__item__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
-                                <a href="#"><i class="fa fa-youtube-play"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
+
+
+
+
             </div>
         </div>
     </section>
@@ -549,138 +513,30 @@
             </div>
             <div class="row">
                 <div class="testimonial__slider owl-carousel">
-                    <div class="col-lg-6">
-                        <div class="testimonial__item">
-                            <div class="testimonial__author">
-                                <div class="testimonial__author__pic">
-                                    <img src="{{asset('frontend/img/testimonial/ta-1.jpg')}}" alt="">
+                    @foreach ($reviews as $review)
+                        <div class="col-lg-6">
+                            <div class="testimonial__item">
+                                <div class="testimonial__author">
+                                    <div class="testimonial__author__pic">
+                                        <img src="{{Storage::disk('uploads')->url('user.png')}}" alt="">
+                                    </div>
+                                    <div class="testimonial__author__text">
+                                        <h5>{{$review->username}}</h5>
+                                        <span>{{$review->user->email}}</span>
+                                    </div>
                                 </div>
-                                <div class="testimonial__author__text">
-                                    <h5>Kerry D.Silva</h5>
-                                    <span>New york</span>
+                                <div class="rating">
+                                    @for ($i = $review->rating; $i > 0; $i--)
+                                        <i class="fa fa-star" style="color: #ffc107"></i>
+                                    @endfor
+                                    @for ($i =5 - $review->rating; $i > 0; $i--)
+                                        <i class="fa fa-star-o" style="color: grey"></i>
+                                    @endfor
                                 </div>
+                                <p>{{$review->description}}</p>
                             </div>
-                            <div class="rating">
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star-half_alt"></span>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua viverra lacus vel facilisis.</p>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="testimonial__item">
-                            <div class="testimonial__author">
-                                <div class="testimonial__author__pic">
-                                    <img src="{{asset('frontend/img/testimonial/ta-2.jpg')}}" alt="">
-                                </div>
-                                <div class="testimonial__author__text">
-                                    <h5>Kerry D.Silva</h5>
-                                    <span>New york</span>
-                                </div>
-                            </div>
-                            <div class="rating">
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star-half_alt"></span>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua viverra lacus vel facilisis.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="testimonial__item">
-                            <div class="testimonial__author">
-                                <div class="testimonial__author__pic">
-                                    <img src="{{asset('frontend/img/testimonial/ta-1.jpg')}}" alt="">
-                                </div>
-                                <div class="testimonial__author__text">
-                                    <h5>Ophelia Nunez</h5>
-                                    <span>London</span>
-                                </div>
-                            </div>
-                            <div class="rating">
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star-half_alt"></span>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua viverra lacus vel facilisis.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="testimonial__item">
-                            <div class="testimonial__author">
-                                <div class="testimonial__author__pic">
-                                    <img src="{{asset('frontend/img/testimonial/ta-2.jpg')}}" alt="">
-                                </div>
-                                <div class="testimonial__author__text">
-                                    <h5>Kerry D.Silva</h5>
-                                    <span>New york</span>
-                                </div>
-                            </div>
-                            <div class="rating">
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star-half_alt"></span>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua viverra lacus vel facilisis.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="testimonial__item">
-                            <div class="testimonial__author">
-                                <div class="testimonial__author__pic">
-                                    <img src="{{asset('frontend/img/testimonial/ta-1.jpg')}}" alt="">
-                                </div>
-                                <div class="testimonial__author__text">
-                                    <h5>Ophelia Nunez</h5>
-                                    <span>London</span>
-                                </div>
-                            </div>
-                            <div class="rating">
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star-half_alt"></span>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua viverra lacus vel facilisis.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="testimonial__item">
-                            <div class="testimonial__author">
-                                <div class="testimonial__author__pic">
-                                    <img src="{{asset('frontend/img/testimonial/ta-2.jpg')}}" alt="">
-                                </div>
-                                <div class="testimonial__author__text">
-                                    <h5>Kerry D.Silva</h5>
-                                    <span>New york</span>
-                                </div>
-                            </div>
-                            <div class="rating">
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star"></span>
-                                <span class="icon_star-half_alt"></span>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut labore et dolore magna aliqua viverra lacus vel facilisis.</p>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>

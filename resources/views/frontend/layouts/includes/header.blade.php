@@ -49,7 +49,7 @@
                         <div class="header__top__inner">
                             <div class="header__top__left">
                                 <ul>
-                                    <li>USD <span class="arrow_carrot-down"></span>
+                                    {{-- <li>USD <span class="arrow_carrot-down"></span>
                                         <ul>
                                             <li>EUR</li>
                                             <li>USD</li>
@@ -60,12 +60,12 @@
                                             <li>Spanish</li>
                                             <li>ENG</li>
                                         </ul>
-                                    </li>
+                                    </li> --}}
                                     <li>
                                         @if (Auth::guest() || Auth::user()->users_roles->role_id != 3)
-                                            <a href="javascript:void(0)" onclick="openLoginModal();"> Login</a>
+                                            <a href="javascript:void(0)" onclick="openLoginModal();"><i class="fa fa-user"></i> Login</a>
                                         @elseif (Auth::user()->users_roles->role_id == 3)
-                                            <a href="#">{{Auth::user()->name}}</a>
+                                            <a href="#"><i class="fa fa-user"></i> {{Auth::user()->name}}</a>
                                             <ul class="dropdown p-2">
                                                 <li><a href="{{route('myaccount')}}" style="color: whitesmoke; display:block; padding:2px;">Account</a></li>
                                                 <li><a href="{{route('myprofile')}}" style="color: whitesmoke; display:block; padding:2px;">Profile</a></li>
@@ -135,7 +135,7 @@
                                 </ul>
                             </li>
                             <li><a href="./blog.html">Blog</a></li>
-                            <li><a href="./contact.html">Contact</a></li>
+                            <li><a href="{{route('contact')}}">Contact</a></li>
                         </ul>
                     </nav>
                 </div>
