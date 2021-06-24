@@ -67,7 +67,19 @@ class PermissionTableSeeder extends Seeder
             ],
             [
                 'name' => 'Manage Review',
-                'slug' => Str::slug('Manage review'),
+                'slug' => Str::slug('Manage Review'),
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+            [
+                'name' => 'Manage Blog',
+                'slug' => Str::slug('Manage Blog'),
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s"),
+            ],
+            [
+                'name' => 'Manage Cookbook',
+                'slug' => Str::slug('Manage Cookbook'),
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s"),
             ],

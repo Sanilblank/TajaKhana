@@ -5,6 +5,7 @@
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="images/favicon.ico" type="image/ico" />
 
@@ -96,13 +97,7 @@
                   <li><a><i class="fa fa-chevron-circle-down"></i> Menu Items<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="{{route('menuitem.index')}}">View Items</a></li>
-                      <li><a href="{{route('menuitem.create')}}">Create Menu Item</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-chevron-circle-down"></i> Combo Menus<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
                       <li><a href="{{route('combomenu.index')}}">View Combo Menus</a></li>
-                      <li><a href="{{route('combomenu.create')}}">Create Combo Menu</a></li>
                       <li><a href="{{route('combomenuRequest.index')}}">View Combo Menu Requests</a></li>
                     </ul>
                   </li>
@@ -110,6 +105,20 @@
                     class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                         <li><a href="{{ route('order.index') }}">All Orders</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-rss-square"></i>Blogs <span
+                    class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li><a href="{{ route('blogcategory.index') }}">Blog Categories</a></li>
+                        <li><a href="{{ route('blog.index') }}">Our Blogs</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-book"></i>Cookbook <span
+                    class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li><a href="{{ route('cookbookcategory.index') }}">Cookbook Categories</a></li>
+                        <li><a href="{{ route('cookbookitem.index') }}">Cookbook Items</a></li>
                     </ul>
                   </li>
                 </ul>

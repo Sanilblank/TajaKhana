@@ -1,12 +1,16 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\BlogCategoryController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchMenuController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChefController;
 use App\Http\Controllers\ChefResponsibilityController;
 use App\Http\Controllers\CombomenuRequestController;
+use App\Http\Controllers\CookbookCategoryController;
+use App\Http\Controllers\CookbookItemController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\MenuitemController;
@@ -136,6 +140,14 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
     //Settings
     Route::resource('setting', SettingController::class);
     Route::resource('slider', SliderController::class);
+
+    //Blogs
+    Route::resource('blogcategory', BlogCategoryController::class);
+    Route::resource('blog', BlogController::class);
+
+    //Cookbook
+    Route::resource('cookbookcategory', CookbookCategoryController::class);
+    Route::resource('cookbookitem', CookbookItemController::class);
 
     // Route::resource('product', ProductController::class);
 });
