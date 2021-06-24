@@ -6,6 +6,7 @@ use App\Http\Controllers\BranchMenuController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChefController;
 use App\Http\Controllers\ChefResponsibilityController;
+use App\Http\Controllers\CombomenuRequestController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\MenuitemController;
@@ -34,6 +35,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [FrontController::class, 'index'])->name('index');
 Route::get('/aboutus', [FrontController::class, 'aboutus'])->name('aboutus');
 Route::get('/contact', [FrontController::class, 'contact'])->name('contact');
+Route::post('/reqcombomenu', [FrontController::class, 'reqcombomenu'])->name('reqcombomenu');
 
 //Shop
 Route::get('/shop/{id}/{location}', [FrontController::class, 'shop'])->name('shop');
@@ -105,6 +107,17 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
     //Menu Item
     Route::resource('menuitem', MenuitemController::class);
+
+    //Combo Menuitem
+    Route::get('/combomenu', [MenuitemController::class, 'combomenu'])->name('combomenu.index');
+    Route::get('/combomenu/create', [MenuitemController::class, 'combomenucreate'])->name('combomenu.create');
+    Route::post('/combomenu/store', [MenuitemController::class, 'combomenustore'])->name('combomenu.store');
+    Route::get('/combomenu/{id}/edit', [MenuitemController::class, 'combomenuedit'])->name('combomenu.edit');
+    Route::put('/combomenu/{id}/update', [MenuitemController::class, 'combomenuupdate'])->name('combomenu.update');
+    Route::delete('/combomenu/{id}/delete', [MenuitemController::class, 'combomenudestroy'])->name('combomenu.destroy');
+
+    Route::resource('combomenuRequest', CombomenuRequestController::class);
+
 
     //Review
     Route::resource('review', ReviewController::class);

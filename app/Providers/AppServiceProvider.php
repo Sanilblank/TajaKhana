@@ -29,9 +29,10 @@ class AppServiceProvider extends ServiceProvider
         //
         $ip = '27.34.30.148'; //For static IP address get
         //$ip = request()->ip(); //Dynamic IP address get
-        $userlocation = Location::get($ip); //Get user coordinates
-        $branch = Branch::where('status', 1)->distance($userlocation->latitude, $userlocation->longitude)->orderBy('distance', 'ASC')->first(); //Choose nearest branch
+        // $userlocation = Location::get($ip); //Get user coordinates
+        // $branch = Branch::where('status', 1)->distance($userlocation->latitude, $userlocation->longitude)->orderBy('distance', 'ASC')->first(); //Choose nearest branch
 
+        $branch = Branch::first();
         $setting = Setting::first();
         view()->share('branch', $branch);
         view()->share('setting', $setting);

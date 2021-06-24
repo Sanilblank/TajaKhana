@@ -26,6 +26,7 @@ class CreateMenuitemsTable extends Migration
             $table->boolean('status');
             $table->boolean('featured');
             $table->string('costprice');
+            $table->boolean('is_combo')->nullable();
             $table->timestamps();
         });
     }

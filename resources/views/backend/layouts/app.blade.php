@@ -99,6 +99,13 @@
                       <li><a href="{{route('menuitem.create')}}">Create Menu Item</a></li>
                     </ul>
                   </li>
+                  <li><a><i class="fa fa-chevron-circle-down"></i> Combo Menus<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="{{route('combomenu.index')}}">View Combo Menus</a></li>
+                      <li><a href="{{route('combomenu.create')}}">Create Combo Menu</a></li>
+                      <li><a href="{{route('combomenuRequest.index')}}">View Combo Menu Requests</a></li>
+                    </ul>
+                  </li>
                   <li><a><i class="fa fa-exchange"></i>Orders <span
                     class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
@@ -195,6 +202,7 @@
                     $newnotifications = DB::table('notifications')->where('is_read', 0)->count();
                     $newuser = DB::table('notifications')->where('type','App\Notifications\NewUserNotification')->where('is_read', 0)->count();
                     $neworder = DB::table('notifications')->where('type','App\Notifications\NewOrderNotification')->where('is_read', 0)->count();
+                    $newcomborequest = DB::table('notifications')->where('type','App\Notifications\ComboRequestNotification')->where('is_read', 0)->count();
                 @endphp
                 <li role="presentation" class="nav-item dropdown open">
                   <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
@@ -217,6 +225,15 @@
                             <a class="dropdown-item" href="{{route('order.index')}}">
                                 <span>
                                     <i class="fa fa-cutlery"></i><span style="font-size: 15px;"> &nbsp;<b>{{$neworder}}</b> new order has been received.</span>
+                                </span>
+                            </a>
+                        </li>
+                      @endif
+                      @if ($newcomborequest > 0)
+                        <li class="nav-item">
+                            <a class="dropdown-item" href="{{route('combomenuRequest.index')}}">
+                                <span>
+                                    <i class="fa fa-cutlery"></i><span style="font-size: 15px;"> &nbsp;<b>{{$newcomborequest}}</b> new combo menu request has been received.</span>
                                 </span>
                             </a>
                         </li>

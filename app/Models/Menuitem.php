@@ -24,5 +24,6 @@ class Menuitem extends Model
         'status',
         'featured',
         'costprice',
+        'is_combo',
     ];
 }

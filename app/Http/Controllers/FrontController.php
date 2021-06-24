@@ -12,6 +12,7 @@ use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Chef;
 use App\Models\ChefResponsibility;
+use App\Models\CombomenuRequest;
 use App\Models\DeliveryAddress;
 use App\Models\Menuitem;
 use App\Models\MenuitemImage;
@@ -21,6 +22,7 @@ use App\Models\Review;
 use App\Models\Setting;
 use App\Models\Slider;
 use App\Models\User;
+use App\Notifications\ComboRequestNotification;
 use App\Notifications\NewOrderNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -519,5 +521,27 @@ class FrontController extends Controller
         Mail::to($email)->send(new CustomerEmail($mailData));
 
         return redirect()->back()->with('success', 'Thank you for messaging us. We will get back to you soon.');
+    }
+
+    public function reqcombomenu(Request $request)
+    {
+        $data = $this->validate($request, [
+            'menuitem_id' => 'required',
+            'fullname' => 'required',
+            'contactno' => 'required',
+            'description' => 'required',
+        ]);
+
+        $combomenurequest = CombomenuRequest::create([
+            'fullname' => $data['fullname'],
+            'menuitem_id' => $data['menuitem_id'],
+            'description' => $data['description'],
+            'contactno' => $data['contactno'],
+        ]);
+        $combomenurequest->save();
+        $combomenurequest->notify(new ComboRequestNotification($combomenurequest));
+
+        return redirect()->back()->with('success', 'We will contact you soon.');
+
     }
 }
