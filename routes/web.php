@@ -79,6 +79,18 @@ Route::get('/myreviews', [FrontController::class, 'myreviews'])->name('myreviews
 //Customer Email
 Route::get('/customerEmail', [FrontController::class, 'customerEmail'])->name('customerEmail');
 
+//Blog
+Route::get('/getblogs', [FrontController::class, 'getblogs'])->name('getblogs');
+Route::get('/getblogdetail/{id}', [FrontController::class, 'getblogdetail'])->name('getblogdetail');
+Route::get('/categoryblog/{id}/{slug}', [FrontController::class, 'categoryblog'])->name('categoryblog');
+Route::get('/authorblogs/{name}', [FrontController::class, 'authorblogs'])->name('authorblog');
+
+//CookBook
+Route::get('/getrecipes', [FrontController::class, 'getrecipes'])->name('getrecipes');
+Route::get('/getrecipedetail/{id}/{slug}', [FrontController::class, 'getrecipedetail'])->name('getrecipedetail');
+Route::get('/categorycookbookrecipe/{id}/{slug}', [FrontController::class, 'categorycookbookrecipe'])->name('categorycookbookrecipe');
+Route::get('/authorrecipe/{name}', [FrontController::class, 'authorrecipe'])->name('authorrecipe');
+
 Auth::routes();
 
 Route::get('/verify', [RegisterController::class, 'verifyUser'])->name('verify.user');

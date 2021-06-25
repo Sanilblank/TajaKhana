@@ -1,6 +1,17 @@
 @extends('frontend.layouts.app')
 @push('styles')
+<style>
+    a {
+        color: seagreen;
+    }
 
+    a:hover,
+    a:focus {
+        text-decoration: none;
+        outline: none;
+        color: seagreen;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -47,7 +58,7 @@
 
                             @foreach ($branches as $mainbranch)
                                 <div class="cookbook">
-                                    <div class="cookbook__pic set-bg" data-setbg="{{Storage::disk('uploads')->url($mainbranch->branchimage)}}">
+                                    <div class="cookbook__pic set-bg" onclick="location.href='{{route('shop', [$mainbranch->id, $mainbranch->branchlocation])}}'" data-setbg="{{Storage::disk('uploads')->url($mainbranch->branchimage)}}" style="cursor: pointer">
 
                                     </div>
                                     <div class="cookbook__text">
@@ -75,57 +86,24 @@
                 <div class="col-lg-7 col-md-6 order-sm-12 order-xs-12 order-md-1 order-lg-1">
                     <div class="about__bar">
                         <div class="locations_slider owl-carousel">
-
-
-                                  <div class="cookbook">
-                                    <div class="cookbook__pic set-bg" data-setbg="{{asset('frontend/img/class/class-2.jpg')}}">
-                                        <div class="label">15min</div>
+                            @foreach ($cookbookitems as $cookbookitem)
+                                <div class="cookbook">
+                                    <div class="cookbook__pic set-bg" onclick="location.href='{{route('getrecipedetail', [$cookbookitem->id, $cookbookitem->slug])}}'" data-setbg="{{Storage::disk('uploads')->url($cookbookitem->itemimage)}}" style="cursor: pointer">
+                                        @foreach ($cookbookitem->category as $reqcat)
+                                            @php
+                                                $cat = DB::table('cookbook_categories')->where('id', $reqcat)->first();
+                                            @endphp
+                                            <div class="label">{{$cat->name}}</div>
+                                        @endforeach
                                     </div>
                                     <div class="cookbook__text">
-                                        <h5><a href="#">TEEN COOKING CAMP</a></h5>
-                                        <span>Lorem ipsum dolor sit, amet consectetur adipisicing elit</span>
+                                        <h5><a href="{{route('getrecipedetail', [$cookbookitem->id, $cookbookitem->slug])}}">{{$cookbookitem->itemname}}</a></h5>
+                                        <span>{{date('d F, Y', strtotime($cookbookitem->created_at))}}</span>
                                         <!-- <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p> -->
-                                        <a href="#" class="read_more">Read more</a>
+                                        <a href="{{route('getrecipedetail', [$cookbookitem->id, $cookbookitem->slug])}}" class="read_more">Read more</a>
                                     </div>
                                 </div>
-
-                                  <div class="cookbook">
-                                    <div class="cookbook__pic set-bg" data-setbg="{{asset('frontend/img/class/class-3.jpg')}}">
-                                        <div class="label">15min</div>
-                                    </div>
-                                    <div class="cookbook__text">
-                                        <h5><a href="#">TEEN COOKING CAMP</a></h5>
-                                        <span>Wed 08 Apr 2020; 6.30pm - 9.30pm</span>
-                                        <!-- <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p> -->
-                                        <a href="#" class="read_more">Read more</a>
-                                    </div>
-                                </div>
-
-                                  <div class="cookbook">
-                                    <div class="cookbook__pic set-bg" data-setbg="{{asset('frontend/img/class/class-3.jpg')}}">
-                                        <div class="label">15min</div>
-                                    </div>
-                                    <div class="cookbook__text">
-                                        <h5><a href="#">TEEN COOKING CAMP</a></h5>
-                                        <span>Wed 08 Apr 2020; 6.30pm - 9.30pm</span>
-                                        <!-- <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p> -->
-                                        <a href="#" class="read_more">Read more</a>
-                                    </div>
-                                </div>
-
-                                  <div class="cookbook">
-                                    <div class="cookbook__pic set-bg" data-setbg="{{asset('frontend/img/class/class-4.jpg')}}">
-                                        <div class="label">15min</div>
-                                    </div>
-                                    <div class="cookbook__text">
-                                        <h5><a href="#">TEEN COOKING CAMP</a></h5>
-                                        <span>Wed 08 Apr 2020; 6.30pm - 9.30pm</span>
-                                        <!-- <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p> -->
-                                        <a href="#" class="read_more">Read more</a>
-                                    </div>
-                                </div>
-
-
+                            @endforeach
 
                         </div>
 
@@ -138,7 +116,6 @@
                             <h2>TajaCookbook</h2>
                         </div>
                         <p>Make your favourite meals from our personalised Cookbook.
-                            & also get all the ingredients from TAJAMANDI
                         </p>
                     </div>
                 </div>
@@ -165,51 +142,22 @@
                 <div class="col-lg-12 col-md-6">
                     <div class="about__bar">
                         <div class="blogs_slider owl-carousel">
-                            <div class="class__item">
-                                <div class="class__item__pic set-bg" data-setbg="{{asset('frontend/img/class/class-1.jpg')}}">
-                                    <div class="label">$35.00</div>
+                            @foreach ($blogs as $blog)
+                                <div class="class__item">
+                                    <div class="class__item__pic set-bg" onclick="location.href='{{route('getblogdetail', $blog->id)}}'" data-setbg="{{Storage::disk('uploads')->url($blog->image)}}" style="cursor: pointer">
+                                        @php
+                                            $cat = DB::table('blog_categories')->where('id', $blog->category[0])->first();
+                                        @endphp
+                                        <div class="label">{{$cat->name}}</div>
+                                    </div>
+                                    <div class="class__item__text">
+                                        <h5><a href="{{route('getblogdetail', $blog->id)}}">{{$blog->title}}</a></h5>
+                                        <span>{{date('d F, Y', strtotime($blog->created_at))}}</span>
+                                        {{-- <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p> --}}
+                                        <a href="{{route('getblogdetail', $blog->id)}}" class="read_more">Read more</a>
+                                    </div>
                                 </div>
-                                <div class="class__item__text">
-                                    <h5><a href="#">ADVANCED BAKING COURSE</a></h5>
-                                    <span>Wed 08 Apr 2020; 6.30pm - 9.30pm</span>
-                                    <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p>
-                                    <a href="#" class="read_more">Read more</a>
-                                </div>
-                            </div>
-                            <div class="class__item">
-                                <div class="class__item__pic set-bg" data-setbg="{{asset('frontend/img/class/class-2.jpg')}}">
-                                    <div class="label">$35.00</div>
-                                </div>
-                                <div class="class__item__text">
-                                    <h5><a href="#">TEEN COOKING CAMP</a></h5>
-                                    <span>Wed 08 Apr 2020; 6.30pm - 9.30pm</span>
-                                    <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p>
-                                    <a href="#" class="read_more">Read more</a>
-                                </div>
-                            </div>
-                            <div class="class__item">
-                                <div class="class__item__pic set-bg" data-setbg="{{asset('frontend/img/class/class-1.jpg')}}">
-                                    <div class="label">$35.00</div>
-                                </div>
-                                <div class="class__item__text">
-                                    <h5><a href="#">ADVANCED BAKING COURSE</a></h5>
-                                    <span>Wed 08 Apr 2020; 6.30pm - 9.30pm</span>
-                                    <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p>
-                                    <a href="#" class="read_more">Read more</a>
-                                </div>
-                            </div>
-                            <div class="class__item">
-                                <div class="class__item__pic set-bg" data-setbg="{{asset('frontend/img/class/class-2.jpg')}}">
-                                    <div class="label">$35.00</div>
-                                </div>
-                                <div class="class__item__text">
-                                    <h5><a href="#">TEEN COOKING CAMP</a></h5>
-                                    <span>Wed 08 Apr 2020; 6.30pm - 9.30pm</span>
-                                    <p>Professional course: cook’s certificate in food & wine (six weeks full-time)</p>
-                                    <a href="#" class="read_more">Read more</a>
-                                </div>
-                            </div>
-
+                            @endforeach
 
                         </div>
 
@@ -238,7 +186,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="categories__slider owl-carousel">
+                {{-- <div class="categories__slider owl-carousel">
                     <div class="categories__item">
                         <div class="categories__item__icon">
                             <span class="flaticon-029-cupcake-3"></span>
@@ -275,7 +223,7 @@
                             <h5>Cupcake</h5>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
             </div>
         </div>
@@ -286,138 +234,70 @@
     <section class="product spad">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="{{asset('frontend/img/shop/product-1.jpg')}}">
-                            <div class="product__label">
-                                <span>Cupcake</span>
+
+
+                    @foreach ($branchmenu as $branchmenuitem)
+                        @php
+                            $itemimage = DB::table('menuitem_images')->where('menuitem_id', $branchmenuitem->menuitem_id)->first();
+                        @endphp
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" onclick="location.href='{{route('shopdetails', [$branchmenuitem->id, $branchmenuitem->menuitem->slug])}}'" data-setbg="{{Storage::disk('uploads')->url($itemimage->filename)}}" style="cursor: pointer">
+                                    <div class="product__label">
+                                        @if ($branchmenuitem->menuitem->discount > 0)
+                                            <span>{{$branchmenuitem->menuitem->discount}}% discount</span>
+
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a href="{{route('shopdetails', [$branchmenuitem->id, $branchmenuitem->menuitem->slug])}}">{{$branchmenuitem->menuitem->title}}</a></h6>
+                                    <h6>({{$branchmenuitem->menuitem->quantity}} {{$branchmenuitem->menuitem->unit}})</h6>
+                                    @if ($branchmenuitem->menuitem->discount != 0)
+                                        @php
+                                            $discountamount = ($branchmenuitem->menuitem->discount / 100) * $branchmenuitem->menuitem->price;
+                                            $afterdiscount = $branchmenuitem->menuitem->price - $discountamount;
+                                        @endphp
+                                        <div class="product__item__price">Rs. {{ ceil($afterdiscount) }} <span>Rs.
+                                            {{ $branchmenuitem->menuitem->price }}</span>
+                                        </div>
+                                    @else
+                                        <div class="product__item__price">Rs.{{$branchmenuitem->menuitem->price}}</div>
+                                    @endif
+                                    @if (Auth::guest())
+                                        <div class="cart_add">
+                                            <a href="javascript:void(0)" onclick="openLoginModal();">Add to cart</a>
+                                        </div>
+                                    @else
+                                        <div class="cart_add">
+                                            <form action="{{route('addtocart', $branchmenuitem->id)}}" id="submit{{$branchmenuitem->id}}" method="POST">
+                                                @csrf
+                                                @method('POST')
+                                                @if ($branchmenuitem->menuitem->discount > 0)
+                                                    @php
+                                                        $discountamount = ($branchmenuitem->menuitem->discount / 100) * $branchmenuitem->menuitem->price;
+                                                        $afterdiscount = $branchmenuitem->menuitem->price - $discountamount;
+                                                    @endphp
+
+                                                    <input type="hidden" value="{{ceil($afterdiscount)}}" name="price" class="form-control">
+                                                @else
+                                                    <input type="hidden" value="{{$branchmenuitem->menuitem->price}}" name="price" class="form-control">
+                                                @endif
+                                                <input type="hidden" value="1" name="quantity" class="form-control">
+
+                                                <a href="#" onclick="document.getElementById('submit{{$branchmenuitem->id}}').submit();">Add to cart</a>
+                                            </form>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
-                        <div class="product__item__text">
-                            <h6><a href="#">Dozen Cupcakes</a></h6>
-                            <div class="product__item__price">$32.00</div>
-                            <div class="cart_add">
-                                <a href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="{{asset('frontend/img/shop/product-2.jpg')}}">
-                            <div class="product__label">
-                                <span>Cupcake</span>
-                            </div>
-                        </div>
-                        <div class="product__item__text">
-                            <h6><a href="#">Cookies and Cream</a></h6>
-                            <div class="product__item__price">$30.00</div>
-                            <div class="cart_add">
-                                <a href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="{{asset('frontend/img/shop/product-3.jpg')}}">
-                            <div class="product__label">
-                                <span>Cupcake</span>
-                            </div>
-                        </div>
-                        <div class="product__item__text">
-                            <h6><a href="#">Gluten Free Mini Dozen</a></h6>
-                            <div class="product__item__price">$31.00</div>
-                            <div class="cart_add">
-                                <a href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="{{asset('frontend/img/shop/product-4.jpg')}}">
-                            <div class="product__label">
-                                <span>Cupcake</span>
-                            </div>
-                        </div>
-                        <div class="product__item__text">
-                            <h6><a href="#">Cookie Dough</a></h6>
-                            <div class="product__item__price">$25.00</div>
-                            <div class="cart_add">
-                                <a href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="{{asset('frontend/img/shop/product-5.jpg')}}">
-                            <div class="product__label">
-                                <span>Cupcake</span>
-                            </div>
-                        </div>
-                        <div class="product__item__text">
-                            <h6><a href="#">Vanilla Salted Caramel</a></h6>
-                            <div class="product__item__price">$05.00</div>
-                            <div class="cart_add">
-                                <a href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="{{asset('frontend/img/shop/product-6.jpg')}}">
-                            <div class="product__label">
-                                <span>Cupcake</span>
-                            </div>
-                        </div>
-                        <div class="product__item__text">
-                            <h6><a href="#">German Chocolate</a></h6>
-                            <div class="product__item__price">$14.00</div>
-                            <div class="cart_add">
-                                <a href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="{{asset('frontend/img/shop/product-7.jpg')}}">
-                            <div class="product__label">
-                                <span>Cupcake</span>
-                            </div>
-                        </div>
-                        <div class="product__item__text">
-                            <h6><a href="#">Dulce De Leche</a></h6>
-                            <div class="product__item__price">$32.00</div>
-                            <div class="cart_add">
-                                <a href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="{{asset('frontend/img/shop/product-8.jpg')}}">
-                            <div class="product__label">
-                                <span>Cupcake</span>
-                            </div>
-                        </div>
-                        <div class="product__item__text">
-                            <h6><a href="#">Mississippi Mud</a></h6>
-                            <div class="product__item__price">$08.00</div>
-                            <div class="cart_add">
-                                <a href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    @endforeach
+
                 <div class="col-lg-12 col-md-6 pb-4 text-center pb-4">
                     <div class="about__text">
                         <div class="section-title">
-                            <span><u>View Full Menu</u></span>
+                            <span><u><a href="{{route('shop', [$selectedbranch->id, $selectedbranch->branchlocation])}}">View Full Menu</a></u></span>
                         </div>
                     </div>
                 </div>
@@ -425,38 +305,6 @@
         </div>
     </section>
     <!-- Product Section End -->
-
-    <!-- Class Section Begin -->
-    <section class="class spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="class__form">
-                        <div class="section-title">
-                            <span>Class cakes</span>
-                            <h2>Made from your <br />own hands</h2>
-                        </div>
-                        <form action="#">
-                            <input type="text" placeholder="Name">
-                            <input type="text" placeholder="Phone">
-                            <select>
-                                <option value="">Studying Class</option>
-                                <option value="">Writting Class</option>
-                                <option value="">Reading Class</option>
-                            </select>
-                            <input type="text" placeholder="Type your requirements">
-                            <button type="submit" class="site-btn">registration</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="class__video set-bg" data-setbg="{{asset('frontend/img/class-video.jpg')}}">
-                <a href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&list=RD8PJ3_p7VqHw&start_radio=1"
-                class="play-btn video-popup"><i class="fa fa-play"></i></a>
-            </div>
-        </div>
-    </section>
-    <!-- Class Section End -->
 
     <!-- Team Section Begin -->
     <section class="team spad">
@@ -543,62 +391,8 @@
     </section>
     <!-- Testimonial Section End -->
 
-    <!-- Instagram Section Begin -->
-    <section class="instagram spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 p-0">
-                    <div class="instagram__text">
-                        <div class="section-title">
-                            <span>Follow us on instagram</span>
-                            <h2>Sweet moments are saved as memories.</h2>
-                        </div>
-                        <h5><i class="fa fa-instagram"></i> @sweetcake</h5>
-                    </div>
-                </div>
-                <div class="col-lg-8">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                            <div class="instagram__pic">
-                                <img src="{{asset('frontend/img/instagram/instagram-1.jpg')}}" alt="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                            <div class="instagram__pic middle__pic">
-                                <img src="{{asset('frontend/img/instagram/instagram-2.jpg')}}" alt="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                            <div class="instagram__pic">
-                                <img src="{{asset('frontend/img/instagram/instagram-3.jpg')}}" alt="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                            <div class="instagram__pic">
-                                <img src="{{asset('frontend/img/instagram/instagram-4.jpg')}}" alt="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                            <div class="instagram__pic middle__pic">
-                                <img src="{{asset('frontend/img/instagram/instagram-5.jpg')}}" alt="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                            <div class="instagram__pic">
-                                <img src="{{asset('frontend/img/instagram/instagram-3.jpg')}}" alt="">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Instagram Section End -->
-
-
-
      <!-- Partner Logo Section Begin -->
-     <div class="partner-logo">
+     {{-- <div class="partner-logo">
         <div class="container">
             <div class="logo-carousel owl-carousel">
                 <div class="logo-item">
@@ -628,11 +422,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Partner Logo Section End -->
 
     <!-- Map Begin -->
-    <div class="map">
+    {{-- <div class="map">
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-md-7">
@@ -650,7 +444,7 @@
         <div class="map__iframe">
             <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d10784.188505644011!2d19.053119335158936!3d47.48899529453826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1543907528304" height="300" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
         </div>
-    </div>
+    </div> --}}
     <!-- Map End -->
 
 @endsection

@@ -91,8 +91,8 @@
                             </div>
                             <div class="header__top__right">
                                 <div class="header__top__right__links">
-                                    <a href="#" class="search-switch"><img src="{{asset('frontend/img/icon/search.png')}}" alt=""></a>
-                                    <a href="#"><img src="{{asset('frontend/img/icon/heart.png')}}" alt=""></a>
+                                    {{-- <a href="#" class="search-switch"><img src="{{asset('frontend/img/icon/search.png')}}" alt=""></a>
+                                    <a href="#"><img src="{{asset('frontend/img/icon/heart.png')}}" alt=""></a> --}}
                                 </div>
                                 <div class="header__top__right__cart">
                                     @if (Auth::guest())
@@ -123,8 +123,10 @@
                             <li class="active"><a href="{{route('index')}}">Home</a></li>
                             <li><a href="{{route('aboutus')}}">About</a></li>
                             <li><a href="{{route('shop', [$branch->id, $branch->branchlocation])}}">Shop</a></li>
-                            <li><a href="./location.html">Chef/Location</a></li>
-                            <li><a href="#">Pages</a>
+                            <li><a href="{{route('getblogs')}}">Blog</a></li>
+                            <li><a href="{{route('getrecipes')}}">CookBook</a></li>
+                            {{-- <li><a href="./location.html">Chef/Location</a></li> --}}
+                            {{-- <li><a href="#">Pages</a>
                                 <ul class="dropdown">
                                     <li><a href="./shop-details.html">Shop Details</a></li>
                                     <li><a href="./shoping-cart.html">Shoping Cart</a></li>
@@ -133,8 +135,7 @@
                                     <li><a href="./Class.html">Class</a></li>
                                     <li><a href="./blog-details.html">Blog Details</a></li>
                                 </ul>
-                            </li>
-                            <li><a href="./blog.html">Blog</a></li>
+                            </li> --}}
                             <li><a href="{{route('contact')}}">Contact</a></li>
                         </ul>
                     </nav>

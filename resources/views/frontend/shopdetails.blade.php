@@ -649,25 +649,32 @@
                                     @else
                                         <div class="product__item__price">Rs.{{$menuitem->price}}</div>
                                     @endif
-                                    <div class="cart_add">
-                                        <form action="{{route('addtocart', $relateditem->id)}}" id="submit{{$relateditem->id}}" method="POST">
-                                            @csrf
-                                            @method('POST')
-                                            @if ($menuitem->discount > 0)
-                                                @php
-                                                    $discountamount = ($menuitem->discount / 100) * $menuitem->price;
-                                                    $afterdiscount = $menuitem->price - $discountamount;
-                                                @endphp
+                                    @if (Auth::guest())
+                                        <div class="cart_add">
+                                            <a href="javascript:void(0)" onclick="openLoginModal();">Add to cart</a>
+                                        </div>
+                                    @else
+                                        <div class="cart_add">
+                                            <form action="{{route('addtocart', $relateditem->id)}}" id="submit{{$relateditem->id}}" method="POST">
+                                                @csrf
+                                                @method('POST')
+                                                @if ($menuitem->discount > 0)
+                                                    @php
+                                                        $discountamount = ($menuitem->discount / 100) * $menuitem->price;
+                                                        $afterdiscount = $menuitem->price - $discountamount;
+                                                    @endphp
 
-                                                <input type="hidden" value="{{ceil($afterdiscount)}}" name="price" class="form-control">
-                                            @else
-                                                <input type="hidden" value="{{$menuitem->price}}" name="price" class="form-control">
-                                            @endif
-                                            <input type="hidden" value="1" name="quantity" class="form-control">
+                                                    <input type="hidden" value="{{ceil($afterdiscount)}}" name="price" class="form-control">
+                                                @else
+                                                    <input type="hidden" value="{{$menuitem->price}}" name="price" class="form-control">
+                                                @endif
+                                                <input type="hidden" value="1" name="quantity" class="form-control">
 
-                                            <a href="#" onclick="document.getElementById('submit{{$relateditem->id}}').submit();">Add to cart</a>
-                                        </form>
-                                    </div>
+                                                <a href="#" onclick="document.getElementById('submit{{$relateditem->id}}').submit();">Add to cart</a>
+                                            </form>
+                                        </div>
+                                    @endif
+
                                 </div>
                             </div>
                         </div>

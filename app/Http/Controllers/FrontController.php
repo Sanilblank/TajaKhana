@@ -6,6 +6,8 @@ use App\Mail\CustomerEmail;
 use App\Mail\EmailChangeVerification;
 use App\Mail\PasswordChangeVerification;
 use App\Mail\VerifyUserEmail;
+use App\Models\Blog;
+use App\Models\BlogCategory;
 use App\Models\Branch;
 use App\Models\BranchMenu;
 use App\Models\Cart;
@@ -13,6 +15,8 @@ use App\Models\Category;
 use App\Models\Chef;
 use App\Models\ChefResponsibility;
 use App\Models\CombomenuRequest;
+use App\Models\CookbookCategory;
+use App\Models\CookbookItem;
 use App\Models\DeliveryAddress;
 use App\Models\Menuitem;
 use App\Models\MenuitemImage;
@@ -38,15 +42,19 @@ class FrontController extends Controller
 
     public function index()
     {
-        // $ip = '27.34.30.148'; //For static IP address get
-        // //$ip = request()->ip(); //Dynamic IP address get
-        // $userlocation = Location::get($ip); //Get user coordinates
-        // $branch = Branch::where('status', 1)->distance($userlocation->latitude, $userlocation->longitude)->orderBy('distance', 'ASC')->first(); //Choose nearest branch
+        $ip = '27.34.30.148'; //For static IP address get
+        //$ip = request()->ip(); //Dynamic IP address get
+        $userlocation = Location::get($ip); //Get user coordinates
+        $selectedbranch = Branch::where('status', 1)->distance($userlocation->latitude, $userlocation->longitude)->orderBy('distance', 'ASC')->first(); //Choose nearest branch
         $sliders = Slider::latest()->get();
         $branches = Branch::where('status', 1)->get();
         $chefs = Chef::latest()->take(4)->get();
         $reviews = Review::where('disable', null)->latest()->orderBy('rating', 'DESC')->take(6)->get();
-        return view('frontend.index', compact('branches', 'sliders', 'chefs', 'reviews'));
+        $cookbookitems = CookbookItem::latest()->take(6)->get();
+        $blogs = Blog::latest()->take(6)->get();
+        $branchmenu = BranchMenu::latest()->where('branch_id', $selectedbranch->id)->take(8)->get();
+
+        return view('frontend.index', compact('branches', 'sliders', 'chefs', 'reviews', 'cookbookitems', 'blogs', 'branchmenu', 'selectedbranch'));
     }
 
     public function contact()
@@ -67,7 +75,8 @@ class FrontController extends Controller
     public function aboutus()
     {
         $chefs = Chef::latest()->get();
-        return view('frontend.aboutus', compact('chefs'));
+        $reviews = Review::where('disable', null)->latest()->orderBy('rating', 'DESC')->take(6)->get();
+        return view('frontend.aboutus', compact('chefs', 'reviews'));
     }
 
     public function shop($id, $location)
@@ -76,8 +85,9 @@ class FrontController extends Controller
         $branchmenu = BranchMenu::latest()->where('branch_id', $selectedbranch->id)->get();
         $categories = Category::latest()->where('status', 1)->get();
         $branches = Branch::where('status', 1)->get();
+        $popularitems = CookbookItem::latest()->orderBy('view_count')->take(5)->get();
 
-        return view('frontend.shop', compact('selectedbranch', 'branchmenu', 'categories', 'branches'));
+        return view('frontend.shop', compact('selectedbranch', 'branchmenu', 'categories', 'branches', 'popularitems'));
     }
 
     public function changebranch(Request $request)
@@ -543,5 +553,102 @@ class FrontController extends Controller
 
         return redirect()->back()->with('success', 'We will contact you soon.');
 
+    }
+
+    public function getblogs()
+    {
+        $blogs = Blog::latest()->simplePaginate(4);
+        $allblogs = Blog::all();
+        $popularblogs = Blog::latest()->orderBy('view_count')->take(5)->get();
+        $latestblogs = Blog::latest()->take(5)->get();
+        $blogcategories = BlogCategory::latest()->take(5)->get();
+        return view('frontend.blog', compact('blogs', 'popularblogs', 'blogcategories', 'allblogs', 'latestblogs'));
+    }
+
+    public function getblogdetail($id)
+    {
+        $blog = Blog::findorfail($id);
+        $view_count = $blog->view_count + 1;
+        $blog->update([
+            'view_count' => $view_count,
+        ]);
+        $allblogs = Blog::all();
+        $popularblogs = Blog::latest()->orderBy('view_count')->take(5)->get();
+        $latestblogs = Blog::latest()->take(5)->get();
+        $blogcategories = BlogCategory::latest()->take(5)->get();
+        return view('frontend.blogdetail', compact('blog', 'popularblogs', 'blogcategories', 'allblogs', 'latestblogs'));
+    }
+
+    public function categoryblog($id, $slug)
+    {
+        $reqcategory = BlogCategory::findorfail($id);
+
+        $blogs = Blog::latest()->whereJsonContains('category', "$reqcategory->id")->simplePaginate(4);
+        $allblogs = Blog::all();
+        $popularblogs = Blog::latest()->orderBy('view_count')->take(5)->get();
+        $latestblogs = Blog::latest()->take(5)->get();
+        $blogcategories = BlogCategory::latest()->take(5)->get();
+        return view('frontend.categoryblog', compact('blogs', 'popularblogs', 'blogcategories', 'allblogs', 'latestblogs', 'reqcategory'));
+    }
+
+    public function authorblogs($name)
+    {
+
+        $blogs = Blog::latest()->where('authorname', $name)->simplePaginate(4);
+        $allblogs = Blog::all();
+        $popularblogs = Blog::latest()->orderBy('view_count')->take(5)->get();
+        $latestblogs = Blog::latest()->take(5)->get();
+        $blogcategories = BlogCategory::latest()->take(5)->get();
+        return view('frontend.authorblog', compact('blogs', 'popularblogs', 'blogcategories', 'allblogs', 'latestblogs', 'name'));
+    }
+
+    public function getrecipes()
+    {
+        $cookbookitems = CookbookItem::latest()->simplePaginate(8);
+        $allcookbookitems = CookbookItem::all();
+        $popularitems = CookbookItem::latest()->orderBy('view_count')->take(5)->get();
+        $latestitems = CookbookItem::latest()->take(5)->get();
+        $cookbookcategories = CookbookCategory::latest()->take(5)->get();
+
+        return view('frontend.cookbook', compact('cookbookitems', 'allcookbookitems', 'popularitems', 'latestitems', 'cookbookcategories'));
+    }
+
+    public function getrecipedetail($id, $slug)
+    {
+        $cookbookitem = CookbookItem::findorfail($id);
+        $view_count = $cookbookitem->view_count + 1;
+        $cookbookitem->update([
+            'view_count' => $view_count,
+        ]);
+        $allcookbookitems = CookbookItem::all();
+        $popularitems = CookbookItem::latest()->orderBy('view_count')->take(5)->get();
+        $latestitems = CookbookItem::latest()->take(5)->get();
+        $cookbookcategories = CookbookCategory::latest()->take(5)->get();
+
+        return view('frontend.recipedetail', compact('cookbookitem', 'allcookbookitems', 'popularitems', 'latestitems', 'cookbookcategories'));
+    }
+
+    public function categorycookbookrecipe($id, $slug)
+    {
+        $reqcategory = CookbookCategory::findorfail($id);
+
+        $cookbookitems = CookbookItem::latest()->whereJsonContains('category', "$reqcategory->id")->simplePaginate(8);
+        $allcookbookitems = CookbookItem::all();
+        $popularitems = CookbookItem::latest()->orderBy('view_count')->take(5)->get();
+        $latestitems = CookbookItem::latest()->take(5)->get();
+        $cookbookcategories = CookbookCategory::latest()->take(5)->get();
+
+        return view('frontend.categorycookbook', compact('cookbookitems', 'allcookbookitems', 'popularitems', 'latestitems', 'cookbookcategories', 'reqcategory'));
+    }
+
+    public function authorrecipe($name)
+    {
+        $cookbookitems = CookbookItem::latest()->where('recipeby', $name)->simplePaginate(8);
+        $allcookbookitems = CookbookItem::all();
+        $popularitems = CookbookItem::latest()->orderBy('view_count')->take(5)->get();
+        $latestitems = CookbookItem::latest()->take(5)->get();
+        $cookbookcategories = CookbookCategory::latest()->take(5)->get();
+
+        return view('frontend.authorrecipe', compact('cookbookitems', 'allcookbookitems', 'popularitems', 'latestitems', 'cookbookcategories', 'name'));
     }
 }
