@@ -105,6 +105,9 @@
                     class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                         <li><a href="{{ route('order.index') }}">All Orders</a></li>
+                        <li><a href="{{ route('cartproduct.index') }}">User Carts</a></li>
+                        <li><a href="{{ route('wishlistproduct.index') }}">User Wishlists</a></li>
+                        <li><a href="{{ route('cancelledproduct.index') }}">Cancelled Orders</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-rss-square"></i>Blogs <span
@@ -129,6 +132,7 @@
                     <li><a href="{{ route('driver.index') }}"><i class="fa fa-truck"></i> Drivers</a></li>
                     <li><a href="{{ route('review.index') }}"><i class="fa fa-star"></i> Reviews</a></li>
                     <li><a href="{{route('subscriber.index')}}"><i class="fa fa-male"></i> Subscribers</a></li>
+                    <li><a href="{{route('faq.index')}}"><i class="fa fa-question-circle"></i> Faqs</a></li>
                     <li><a><i class="fa fa-cog"></i> Settings <span
                         class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">

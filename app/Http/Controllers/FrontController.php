@@ -20,6 +20,7 @@ use App\Models\CombomenuRequest;
 use App\Models\CookbookCategory;
 use App\Models\CookbookItem;
 use App\Models\DeliveryAddress;
+use App\Models\Faq;
 use App\Models\Menuitem;
 use App\Models\MenuitemImage;
 use App\Models\Order;
@@ -29,6 +30,7 @@ use App\Models\Setting;
 use App\Models\Slider;
 use App\Models\Subscriber;
 use App\Models\User;
+use App\Models\Wishlist;
 use App\Notifications\ComboRequestNotification;
 use App\Notifications\NewOrderNotification;
 use Illuminate\Http\Request;
@@ -724,5 +726,41 @@ class FrontController extends Controller
             Mail::to($subscriber->email)->send(new SubscriberMail($mailData));
         }
 
+    }
+
+    public function wishlist()
+    {
+        $wishlistproducts = Wishlist::latest()->where('user_id', Auth::user()->id)->get();
+        return view('frontend.wishlist', compact('wishlistproducts'));
+    }
+
+    public function addtowishlist($id)
+    {
+        $wishlist = Wishlist::where('branchmenu_id', $id)->where('user_id', Auth::user()->id)->first();
+        if($wishlist) {
+            return redirect()->back()->with('failure', 'Item is already in wishlist. Go to wishlist.');
+        } else{
+            $wishlistproduct = Wishlist::create([
+                'user_id' => Auth::user()->id,
+                'branchmenu_id' => $id,
+            ]);
+
+            $wishlistproduct->save();
+            return redirect()->back()->with('success', 'Item is added in wishlist successfully.');
+        }
+    }
+
+    public function removefromwishlist($id)
+    {
+        $wishlist = Wishlist::findorfail($id);
+        $wishlist->delete();
+
+        return redirect()->back()->with('success', 'Item is removed from wishlist successfully.');
+    }
+
+    public function viewfaqs()
+    {
+        $faqs = Faq::latest()->get();
+        return view('frontend.viewfaqs', compact('faqs'));
     }
 }

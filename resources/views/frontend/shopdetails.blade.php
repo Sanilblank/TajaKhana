@@ -211,7 +211,7 @@
                                     </div>
                                 </div>
                                 <a href="javascript:void(0)" onclick="openLoginModal();" class="primary-btn">Add to cart</a>
-                                {{-- <a href="#" class="heart__btn"><span class="icon_heart_alt"></span></a> --}}
+                                <a href="javascript:void(0)" onclick="openLoginModal();" class="heart__btn"><span class="icon_heart_alt"></span></a>
                             </div>
                         @else
                             <form action="{{route('addtocart', $branchmenuitem->id)}}" id="formsubmit{{$branchmenuitem->id}}" method="POST">
@@ -235,6 +235,7 @@
                                     @endif
                                     <div class="cart_add">
                                         <a href="#" class="primary-btn" onclick="document.getElementById('formsubmit{{$branchmenuitem->id}}').submit();">Add to cart</a>
+                                        <a href="{{route('addtowishlist', $branchmenuitem->id)}}" class="heart__btn"><span class="icon_heart_alt"></span></a>
                                     </div>
                                 </div>
                             </form>

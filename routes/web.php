@@ -5,6 +5,8 @@ use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchMenuController;
+use App\Http\Controllers\CancelledproductController;
+use App\Http\Controllers\CartproductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChefController;
 use App\Http\Controllers\ChefResponsibilityController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\CombomenuRequestController;
 use App\Http\Controllers\CookbookCategoryController;
 use App\Http\Controllers\CookbookItemController;
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\MenuitemController;
 use App\Http\Controllers\OrderController;
@@ -24,6 +27,7 @@ use App\Http\Controllers\SliderController;
 use App\Http\Controllers\SocialMediaController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WishlistproductController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -53,6 +57,11 @@ Route::post('/addtocart/{id}', [FrontController::class, 'addtocart'])->name('add
 Route::get('/cart', [FrontController::class, 'cart'])->name('cart');
 Route::put('/updatequantity/{id}', [FrontController::class, 'updatequantity'])->name('updatequantity');
 Route::get('/removefromcart/{id}', [FrontController::class, 'removefromcart'])->name('removefromcart');
+
+// Wishlist
+Route::get('/wishlist', [FrontController::class, 'wishlist'])->name('wishlist');
+Route::get('/addtowishlist/{id}', [FrontController::class, 'addtowishlist'])->name('addtowishlist');
+Route::get('/removefromwishlist/{id}', [FrontController::class, 'removefromwishlist'])->name('removefromwishlist');
 
 //Checkout
 Route::get('/checkout/{id}', [FrontController::class, 'checkout'])->name('checkout');
@@ -107,6 +116,9 @@ Route::get('auth/facebook/callback', [SocialMediaController::class, 'facebookSig
 // Sign in with google
 Route::get('auth/google', [SocialMediaController::class, 'redirectToGoogle']);
 Route::get('auth/google/callback', [SocialMediaController::class, 'handleGoogleCallback']);
+
+//Faq
+Route::get('/viewfaqs', [FrontController::class, 'viewfaqs'])->name('viewfaqs');
 
 Auth::routes();
 
@@ -166,6 +178,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
     Route::put('/changeOrderStatus/{id}', [OrderController::class, 'changeOrderStatus'])->name('changeOrderStatus');
     Route::put('/productorder', [OrderController::class, 'productorder'])->name('productorder');
 
+    Route::resource('cartproduct', CartproductController::class);
+    Route::resource('wishlistproduct', WishlistproductController::class);
+    Route::resource('cancelledproduct', CancelledproductController::class);
+    Route::get('/cancelledordershow/{id}', [CancelledproductController::class, 'cancelledordershow'])->name('cancelledordershow');
+
     //Settings
     Route::resource('setting', SettingController::class);
     Route::resource('slider', SliderController::class);
@@ -180,6 +197,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
     //Subscriber
     Route::resource('subscriber', SubscriberController::class);
+
+    //Faq
+    Route::resource('faq', FaqController::class);
 
     // Route::resource('product', ProductController::class);
 });
