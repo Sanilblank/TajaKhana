@@ -21,6 +21,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SliderController;
+use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -91,6 +92,13 @@ Route::get('/getrecipedetail/{id}/{slug}', [FrontController::class, 'getrecipede
 Route::get('/categorycookbookrecipe/{id}/{slug}', [FrontController::class, 'categorycookbookrecipe'])->name('categorycookbookrecipe');
 Route::get('/authorrecipe/{name}', [FrontController::class, 'authorrecipe'])->name('authorrecipe');
 
+//Search
+Route::get('/searchitem/{id}/{slug}', [FrontController::class, 'searchitem'])->name('searchitem');
+
+//Subscriber
+Route::post('registerSubscriber', [FrontController::class, 'registerSubscriber'])->name('registerSubscriber');
+Route::get('/subscriberconfirm',[FrontController::class, 'subscriberconfirm'])->name('subscriberconfirm');
+
 Auth::routes();
 
 Route::get('/verify', [RegisterController::class, 'verifyUser'])->name('verify.user');
@@ -160,6 +168,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
     //Cookbook
     Route::resource('cookbookcategory', CookbookCategoryController::class);
     Route::resource('cookbookitem', CookbookItemController::class);
+
+    //Subscriber
+    Route::resource('subscriber', SubscriberController::class);
 
     // Route::resource('product', ProductController::class);
 });

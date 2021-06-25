@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Menuitem extends Model
 {
     use HasFactory;
+    use Searchable;
     protected $casts = [
         'category_id' => 'array',
     ];
@@ -26,4 +28,9 @@ class Menuitem extends Model
         'costprice',
         'is_combo',
     ];
+
+    public function searchableAs()
+    {
+        return 'tajakhana_items';
+    }
 }

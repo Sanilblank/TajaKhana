@@ -32,8 +32,10 @@
                 <div class="footer__newslatter">
                     <h6>Subscribe</h6>
                     <p>Get latest updates and offers.</p>
-                    <form action="#">
-                        <input type="text" placeholder="Email">
+                    <form action="{{route('registerSubscriber')}}" method="POST">
+                        @csrf
+                        @method('POST')
+                        <input type="email" name="email" placeholder="Enter your mail">
                         <button type="submit"><i class="fa fa-send-o"></i></button>
                     </form>
                 </div>

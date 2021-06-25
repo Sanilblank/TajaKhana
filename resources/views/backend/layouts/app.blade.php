@@ -128,6 +128,7 @@
                 <ul class="nav side-menu">
                     <li><a href="{{ route('driver.index') }}"><i class="fa fa-truck"></i> Drivers</a></li>
                     <li><a href="{{ route('review.index') }}"><i class="fa fa-star"></i> Reviews</a></li>
+                    <li><a href="{{route('subscriber.index')}}"><i class="fa fa-male"></i> Subscribers</a></li>
                     <li><a><i class="fa fa-cog"></i> Settings <span
                         class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">

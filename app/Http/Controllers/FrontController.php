@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Mail\CustomerEmail;
 use App\Mail\EmailChangeVerification;
 use App\Mail\PasswordChangeVerification;
+use App\Mail\RegisterSubscriber;
+use App\Mail\SubscriberMail;
 use App\Mail\VerifyUserEmail;
 use App\Models\Blog;
 use App\Models\BlogCategory;
@@ -25,6 +27,7 @@ use App\Models\OrderedProducts;
 use App\Models\Review;
 use App\Models\Setting;
 use App\Models\Slider;
+use App\Models\Subscriber;
 use App\Models\User;
 use App\Notifications\ComboRequestNotification;
 use App\Notifications\NewOrderNotification;
@@ -35,6 +38,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Stevebauman\Location\Facades\Location;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Str;
 
 class FrontController extends Controller
 {
@@ -650,5 +654,75 @@ class FrontController extends Controller
         $cookbookcategories = CookbookCategory::latest()->take(5)->get();
 
         return view('frontend.authorrecipe', compact('cookbookitems', 'allcookbookitems', 'popularitems', 'latestitems', 'cookbookcategories', 'name'));
+    }
+
+    public function searchitem($id, $slug)
+    {
+        $menuitem = Menuitem::findorfail($id);
+        $branchmenu = BranchMenu::where('menuitem_id', $menuitem->id)->simplePaginate(12);
+
+        return view('frontend.searchitem', compact('menuitem', 'branchmenu'));
+    }
+
+    public function registerSubscriber(Request $request)
+    {
+        $data = $this->validate($request, [
+            'email'=>'required|email',
+        ]);
+
+        $exsitingsubscriber = Subscriber::where('email', $data['email'])->first();
+        if($exsitingsubscriber)
+        {
+            return redirect()->route('index')->with('success', 'You have already subscribed. Thank you!!');
+        }
+        else{
+            $subscriber = Subscriber::create([
+                'email'=>$data['email'],
+                'is_verified'=>0,
+                'verification_code'=>sha1(time())
+            ]);
+            $subscriber->save();
+            $mailData = [
+                'verification_code' => $subscriber->verification_code,
+            ];
+            Mail::to($data['email'])->send(new RegisterSubscriber($mailData));
+
+            return redirect()->route('index')->with('success', 'We have sent a confirmation code to your email account for subscription. Please Check your email.');
+        }
+    }
+
+    public function subscriberconfirm()
+    {
+        $verification_code = \Illuminate\Support\Facades\Request::get('code');
+        $subscriber = Subscriber::where('verification_code', $verification_code)->first();
+        if( $subscriber != null)
+        {
+            $subscriber->is_verified = 1;
+            $subscriber->save();
+            return redirect()->route('index')->with('success', 'Thank you for subscribing.');
+        }
+        return redirect()->route('index')->with('failure', 'Sorry, Your subscribtion is not confirmed. Please try again!');
+    }
+
+    public static function sendsubscribermail($item_id)
+    {
+        $menuitem = Menuitem::findorfail($item_id);
+        $menuitem_slug = Str::slug($menuitem->title);
+        $menuitemimage = MenuitemImage::where('menuitem_id', $item_id)->first();
+        $url = 'http://127.0.0.1:8000/searchitem/' . $menuitem->id . '/' . $menuitem_slug;
+        $setting = Setting::first();
+        $mailData = [
+            'menuitem' => $menuitem,
+            'menuitemimage' => $menuitemimage,
+            'url' => $url,
+            'setting' => $setting,
+        ];
+
+        $subscribers = Subscriber::where('is_verified', 1)->get();
+        foreach($subscribers as $subscriber)
+        {
+            Mail::to($subscriber->email)->send(new SubscriberMail($mailData));
+        }
+
     }
 }

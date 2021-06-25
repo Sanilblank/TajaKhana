@@ -194,6 +194,10 @@ class MenuitemController extends Controller
             }
 
             $menuitem->save();
+            if($data['status'] == 1)
+            {
+                FrontController::sendsubscribermail($menuitem->id);
+            }
             return redirect()->route('menuitem.index')->with('success', 'Menu Item successfully Created.');
 
     }

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CookbookItem extends Model
 {
     use HasFactory;
+    use Searchable;
 
     protected $casts = [
         'category'=>'array',
@@ -33,6 +35,11 @@ class CookbookItem extends Model
         'steps',
         'view_count',
     ];
+
+    public function searchableAs()
+    {
+        return 'tajakhana_cookbooks';
+    }
 
     public function levelofcooking()
     {
