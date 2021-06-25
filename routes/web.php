@@ -21,6 +21,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SliderController;
+use App\Http\Controllers\SocialMediaController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -98,6 +99,14 @@ Route::get('/searchitem/{id}/{slug}', [FrontController::class, 'searchitem'])->n
 //Subscriber
 Route::post('registerSubscriber', [FrontController::class, 'registerSubscriber'])->name('registerSubscriber');
 Route::get('/subscriberconfirm',[FrontController::class, 'subscriberconfirm'])->name('subscriberconfirm');
+
+// Sign in with facebook
+Route::get('auth/facebook', [SocialMediaController::class, 'redirectToFacebook']);
+Route::get('auth/facebook/callback', [SocialMediaController::class, 'facebookSignin']);
+
+// Sign in with google
+Route::get('auth/google', [SocialMediaController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [SocialMediaController::class, 'handleGoogleCallback']);
 
 Auth::routes();
 

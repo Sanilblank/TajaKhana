@@ -23,6 +23,8 @@ class User extends Authenticatable
         'password',
         'verification_code',
         'is_verified',
+        'facebook_id',
+        'google_id'
     ];
 
     /**
